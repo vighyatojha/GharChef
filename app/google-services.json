@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "929896322836",
+    "project_id": "gharchef-61958",
+    "storage_bucket": "gharchef-61958.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929896322836:android:0c8b6a7f414d9253e91401",
+        "android_client_info": {
+          "package_name": "com.example.gharchef"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0fC1_iCvymKW-iR641Rg-DI1QPwWQhWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
