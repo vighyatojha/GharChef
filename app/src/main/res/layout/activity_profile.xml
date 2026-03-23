@@ -1,100 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="#F5F0EA">
 
-    <!-- BOTTOM NAV -->
+    <!-- STANDARD USER BOTTOM NAV — 5 tabs -->
     <LinearLayout android:id="@+id/bottomNav"
         android:layout_width="match_parent" android:layout_height="64dp"
         android:layout_alignParentBottom="true"
-        android:background="#FFFFFF" android:elevation="8dp"
-        android:orientation="horizontal" android:weightSum="4">
+        android:background="#FFFFFF" android:elevation="12dp"
+        android:orientation="horizontal" android:weightSum="5">
         <LinearLayout android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_home" app:tint="#AAAAAA" android:contentDescription="Home" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HOME" android:textColor="#AAAAAA" android:textSize="9sp" android:layout_marginTop="2dp" />
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_home" app:tint="#AAAAAA" android:contentDescription="Home"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="#AAAAAA" android:textSize="9sp" android:layout_marginTop="2dp"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/navSearch" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_search" app:tint="#AAAAAA" android:contentDescription="Search"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Search" android:textColor="#AAAAAA" android:textSize="9sp" android:layout_marginTop="2dp"/>
         </LinearLayout>
         <LinearLayout android:id="@+id/navOrders" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_orders" app:tint="#AAAAAA" android:contentDescription="Orders" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ORDERS" android:textColor="#AAAAAA" android:textSize="9sp" android:layout_marginTop="2dp" />
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_orders" app:tint="#AAAAAA" android:contentDescription="Orders"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Orders" android:textColor="#AAAAAA" android:textSize="9sp" android:layout_marginTop="2dp"/>
         </LinearLayout>
-        <LinearLayout android:id="@+id/navFavs" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_heart_outline" app:tint="#AAAAAA" android:contentDescription="Favs" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="FAVORITES" android:textColor="#AAAAAA" android:textSize="9sp" android:layout_marginTop="2dp" />
+        <LinearLayout android:id="@+id/navCart" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_cart" app:tint="#AAAAAA" android:contentDescription="Cart"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cart" android:textColor="#AAAAAA" android:textSize="9sp" android:layout_marginTop="2dp"/>
         </LinearLayout>
         <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_profile" app:tint="#E8871A" android:contentDescription="Profile" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PROFILE" android:textColor="#E8871A" android:textSize="9sp" android:textStyle="bold" android:layout_marginTop="2dp" />
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_profile" app:tint="#E8871A" android:contentDescription="Profile"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profile" android:textColor="#E8871A" android:textSize="9sp" android:textStyle="bold" android:layout_marginTop="2dp"/>
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomNav"
-        android:scrollbars="none">
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav" android:scrollbars="none">
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- HEADER -->
-            <RelativeLayout android:layout_width="match_parent" android:layout_height="60dp"
-                android:background="#F5F0EA" android:paddingStart="16dp" android:paddingEnd="16dp">
+            <!-- ── HERO HEADER CARD ── -->
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="200dp"
+                android:background="#E8871A">
+
+                <!-- Back button -->
                 <ImageView android:id="@+id/ivBack"
-                    android:layout_width="36dp" android:layout_height="36dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_back"
+                    android:layout_width="40dp" android:layout_height="40dp"
+                    android:layout_margin="12dp"
                     android:background="@drawable/bg_back_button"
-                    android:padding="8dp" android:contentDescription="Back" />
+                    android:src="@drawable/ic_back"
+                    android:padding="8dp" android:contentDescription="Back"/>
+
+                <!-- Title -->
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="Profile Settings" android:textColor="#1A1A2E"
-                    android:textSize="18sp" android:textStyle="bold" />
-            </RelativeLayout>
+                    android:layout_centerHorizontal="true" android:layout_marginTop="20dp"
+                    android:text="My Profile" android:textColor="#FFFFFF"
+                    android:textSize="18sp" android:textStyle="bold"/>
 
-            <!-- AVATAR + NAME -->
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:gravity="center" android:orientation="vertical"
-                android:paddingTop="16dp" android:paddingBottom="8dp">
-
-                <FrameLayout android:layout_width="90dp" android:layout_height="90dp">
+                <!-- Avatar Circle centered at bottom -->
+                <FrameLayout android:layout_width="96dp" android:layout_height="96dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="-48dp"
+                    android:background="@drawable/bg_avatar_circle_orange"
+                    android:elevation="4dp">
                     <ImageView android:id="@+id/ivAvatar"
-                        android:layout_width="90dp" android:layout_height="90dp"
-                        android:background="@drawable/bg_avatar_circle_orange"
+                        android:layout_width="60dp" android:layout_height="60dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_profile"
-                        android:padding="20dp"
-                        android:contentDescription="Avatar" />
-                    <FrameLayout android:layout_width="26dp" android:layout_height="26dp"
+                        android:contentDescription="Avatar"/>
+                    <!-- Edit overlay -->
+                    <FrameLayout android:layout_width="28dp" android:layout_height="28dp"
                         android:layout_gravity="bottom|end"
                         android:background="@drawable/bg_edit_avatar_btn">
                         <ImageView android:layout_width="14dp" android:layout_height="14dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_edit_white"
-                            android:contentDescription="Edit" />
+                            android:contentDescription="Edit"/>
                     </FrameLayout>
                 </FrameLayout>
+            </RelativeLayout>
 
+            <!-- Spacer for avatar overflow -->
+            <View android:layout_width="match_parent" android:layout_height="56dp"/>
+
+            <!-- Name + Email -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center" android:orientation="vertical"
+                android:layout_marginBottom="4dp">
                 <TextView android:id="@+id/tvProfileName"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
                     android:text="Your Name" android:textColor="#1A1A2E"
-                    android:textSize="22sp" android:textStyle="bold" />
-
-                <!-- Premium badge -->
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/bg_premium_badge"
-                    android:paddingStart="14dp" android:paddingEnd="14dp"
-                    android:paddingTop="4dp" android:paddingBottom="4dp"
-                    android:text="Premium Member"
-                    android:textColor="#C8873A" android:textSize="12sp" android:textStyle="bold" />
+                    android:textSize="22sp" android:textStyle="bold"/>
+                <TextView android:id="@+id/tvProfileEmail"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="" android:textColor="#AAAAAA" android:textSize="13sp"/>
             </LinearLayout>
 
-            <!-- PROFILE COMPLETION CARD -->
+            <!-- ── STATS ROW ── -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+                android:layout_marginTop="12dp" android:layout_marginBottom="4dp"
+                android:background="#FFFFFF" android:orientation="horizontal"
+                android:weightSum="3" android:elevation="2dp">
+                <!-- Orders -->
+                <LinearLayout android:layout_width="0dp" android:layout_height="72dp"
+                    android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tvOrderCount"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="0" android:textColor="#E8871A"
+                        android:textSize="22sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Orders" android:textColor="#AAAAAA" android:textSize="11sp"/>
+                </LinearLayout>
+                <View android:layout_width="1dp" android:layout_height="40dp"
+                    android:layout_gravity="center_vertical" android:background="#F0F0F0"/>
+                <!-- Delivery address -->
+                <LinearLayout android:layout_width="0dp" android:layout_height="72dp"
+                    android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tvCityDisplay"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="—" android:textColor="#E8871A"
+                        android:textSize="14sp" android:textStyle="bold"
+                        android:maxLines="1" android:ellipsize="end"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="City" android:textColor="#AAAAAA" android:textSize="11sp"/>
+                </LinearLayout>
+                <View android:layout_width="1dp" android:layout_height="40dp"
+                    android:layout_gravity="center_vertical" android:background="#F0F0F0"/>
+                <!-- Diet -->
+                <LinearLayout android:layout_width="0dp" android:layout_height="72dp"
+                    android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                    <TextView android:id="@+id/tvDietDisplay"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Veg 🌿" android:textColor="#E8871A"
+                        android:textSize="14sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Diet" android:textColor="#AAAAAA" android:textSize="11sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ── PROFILE COMPLETION CARD ── -->
             <androidx.cardview.widget.CardView android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
                 app:cardBackgroundColor="#FFFFFF" app:cardCornerRadius="16dp" app:cardElevation="2dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="vertical" android:padding="16dp">
@@ -103,38 +153,36 @@
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Profile Completion" android:textColor="#1A1A2E"
-                            android:textSize="14sp" android:textStyle="bold" />
+                            android:textSize="14sp" android:textStyle="bold"/>
                         <TextView android:id="@+id/tvCompletionPct"
                             android:layout_width="wrap_content" android:layout_height="wrap_content"
                             android:text="0%" android:textColor="#4CAF50"
-                            android:textSize="14sp" android:textStyle="bold" />
+                            android:textSize="14sp" android:textStyle="bold"/>
                     </LinearLayout>
                     <ProgressBar android:id="@+id/progressCompletion"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent" android:layout_height="8dp"
                         android:layout_marginTop="8dp"
                         android:max="100" android:progress="0"
-                        android:progressTint="#4CAF50"
-                        android:progressBackgroundTint="#E0E0E0" />
+                        android:progressTint="#4CAF50" android:progressBackgroundTint="#E0E0E0"/>
                     <TextView android:id="@+id/tvCompletionHint"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Complete your profile to get the best experience!"
-                        android:textColor="#AAAAAA" android:textSize="12sp" />
+                        android:text="Complete your profile for the best experience!"
+                        android:textColor="#AAAAAA" android:textSize="12sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- LOADING -->
             <ProgressBar android:id="@+id/progressBar"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal" android:layout_marginTop="20dp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
-            <!-- PERSONAL DETAILS SECTION -->
+            <!-- ── PERSONAL DETAILS ── -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginStart="16dp" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"
+                android:layout_marginStart="20dp" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"
                 android:text="Personal Details" android:textColor="#1A1A2E"
-                android:textSize="16sp" android:textStyle="bold" />
+                android:textSize="16sp" android:textStyle="bold"/>
 
             <androidx.cardview.widget.CardView android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -143,123 +191,127 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:orientation="vertical" android:padding="16dp">
 
+                    <!-- Full Name -->
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Full Name" android:textColor="#888888" android:textSize="12sp" android:textStyle="bold" />
+                        android:text="Full Name" android:textColor="#888888" android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
                     <EditText android:id="@+id/etEditName"
                         android:layout_width="match_parent" android:layout_height="52dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="6dp" android:background="@drawable/bg_input_field"
                         android:hint="Enter full name" android:textColorHint="#CCCCCC"
-                        android:inputType="textPersonName"
-                        android:paddingStart="14dp" android:paddingEnd="14dp"
-                        android:textColor="#1A1A2E" android:textSize="14sp" />
+                        android:inputType="textPersonName" android:paddingStart="14dp" android:paddingEnd="14dp"
+                        android:textColor="#1A1A2E" android:textSize="14sp"/>
 
+                    <!-- Mobile -->
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="Mobile Number" android:textColor="#888888" android:textSize="12sp" android:textStyle="bold" />
+                        android:text="Mobile Number" android:textColor="#888888" android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
                     <EditText android:id="@+id/etEditMobile"
                         android:layout_width="match_parent" android:layout_height="52dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="6dp" android:background="@drawable/bg_input_field"
                         android:hint="+91 00000 00000" android:textColorHint="#CCCCCC"
                         android:inputType="phone" android:maxLength="10"
                         android:paddingStart="14dp" android:paddingEnd="14dp"
-                        android:textColor="#1A1A2E" android:textSize="14sp" />
+                        android:textColor="#1A1A2E" android:textSize="14sp"/>
 
+                    <!-- Delivery Address -->
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="Delivery Address" android:textColor="#888888" android:textSize="12sp" android:textStyle="bold" />
+                        android:text="Delivery Address" android:textColor="#888888" android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
                     <EditText android:id="@+id/etEditAddress"
                         android:layout_width="match_parent" android:layout_height="80dp"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_input_field"
+                        android:layout_marginTop="6dp" android:background="@drawable/bg_input_field"
                         android:hint="House no, Street, Area" android:textColorHint="#CCCCCC"
                         android:inputType="textPostalAddress|textMultiLine"
                         android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="12dp"
-                        android:textColor="#1A1A2E" android:textSize="14sp"
-                        android:gravity="top" />
+                        android:textColor="#1A1A2E" android:textSize="14sp" android:gravity="top"/>
 
+                    <!-- City + Pincode -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:layout_marginTop="14dp" android:orientation="horizontal" android:weightSum="2">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                             android:layout_weight="1" android:layout_marginEnd="8dp" android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="City" android:textColor="#888888" android:textSize="12sp" android:textStyle="bold" />
+                                android:text="City" android:textColor="#888888" android:textSize="11sp" android:textStyle="bold"/>
                             <EditText android:id="@+id/etEditCity"
                                 android:layout_width="match_parent" android:layout_height="52dp"
-                                android:layout_marginTop="6dp"
-                                android:background="@drawable/bg_input_field"
+                                android:layout_marginTop="6dp" android:background="@drawable/bg_input_field"
                                 android:hint="City" android:textColorHint="#CCCCCC"
                                 android:inputType="textCapWords"
                                 android:paddingStart="14dp" android:paddingEnd="14dp"
-                                android:textColor="#1A1A2E" android:textSize="14sp" />
+                                android:textColor="#1A1A2E" android:textSize="14sp"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                             android:layout_weight="1" android:layout_marginStart="8dp" android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                android:text="Pincode" android:textColor="#888888" android:textSize="12sp" android:textStyle="bold" />
+                                android:text="Pincode" android:textColor="#888888" android:textSize="11sp" android:textStyle="bold"/>
                             <EditText android:id="@+id/etEditPincode"
                                 android:layout_width="match_parent" android:layout_height="52dp"
-                                android:layout_marginTop="6dp"
-                                android:background="@drawable/bg_input_field"
+                                android:layout_marginTop="6dp" android:background="@drawable/bg_input_field"
                                 android:hint="6-digit code" android:textColorHint="#CCCCCC"
                                 android:inputType="number" android:maxLength="6"
                                 android:paddingStart="14dp" android:paddingEnd="14dp"
-                                android:textColor="#1A1A2E" android:textSize="14sp" />
+                                android:textColor="#1A1A2E" android:textSize="14sp"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- DIETARY PREFERENCE -->
+            <!-- ── DIETARY PREFERENCE ── -->
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginStart="16dp" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"
+                android:layout_marginStart="20dp" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"
                 android:text="Dietary Preference" android:textColor="#1A1A2E"
-                android:textSize="16sp" android:textStyle="bold" />
+                android:textSize="16sp" android:textStyle="bold"/>
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
                 android:orientation="horizontal" android:weightSum="2">
-
                 <Button android:id="@+id/btnVeg"
-                    android:layout_width="0dp" android:layout_height="48dp"
-                    android:layout_weight="1" android:layout_marginEnd="8dp"
+                    android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/bg_diet_veg_selected"
                     android:stateListAnimator="@null"
-                    android:text="🌿 Pure Veg"
-                    android:textColor="#2E7D32" android:textSize="14sp" android:textStyle="bold" />
-
+                    android:text="🌿  Pure Veg" android:textColor="#2E7D32" android:textSize="14sp" android:textStyle="bold"/>
                 <Button android:id="@+id/btnNonVeg"
-                    android:layout_width="0dp" android:layout_height="48dp"
-                    android:layout_weight="1" android:layout_marginStart="8dp"
+                    android:layout_width="0dp" android:layout_height="52dp" android:layout_weight="1"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/bg_diet_nonveg_unselected"
                     android:stateListAnimator="@null"
-                    android:text="🍖 Non-Veg"
-                    android:textColor="#888888" android:textSize="14sp" />
+                    android:text="🍖  Non-Veg" android:textColor="#888888" android:textSize="14sp"/>
             </LinearLayout>
 
-            <!-- SAVE BUTTON -->
+            <!-- ── LOCATION BUTTON ── -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="20dp" android:layout_marginTop="20dp" android:layout_marginBottom="8dp"
+                android:text="Delivery Location" android:textColor="#1A1A2E"
+                android:textSize="16sp" android:textStyle="bold"/>
+
+            <Button android:id="@+id/btnUpdateLocation"
+                android:layout_width="match_parent" android:layout_height="52dp"
+                android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_logout_button"
+                android:stateListAnimator="@null"
+                android:text="📍  Update My Location on Map"
+                android:textColor="#E8871A" android:textSize="14sp" android:textStyle="bold"/>
+
+            <!-- ── SAVE BUTTON ── -->
             <Button android:id="@+id/btnSave"
                 android:layout_width="match_parent" android:layout_height="56dp"
                 android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/bg_button_orange"
                 android:stateListAnimator="@null"
-                android:drawableStart="@drawable/ic_save"
-                android:drawablePadding="8dp"
                 android:text="Save Changes"
-                android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold" />
+                android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/>
 
-            <!-- LOGOUT BUTTON -->
+            <!-- ── LOGOUT ── -->
             <Button android:id="@+id/btnLogout"
                 android:layout_width="match_parent" android:layout_height="52dp"
                 android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
-                android:layout_marginTop="10dp" android:layout_marginBottom="24dp"
+                android:layout_marginTop="10dp" android:layout_marginBottom="28dp"
                 android:background="@drawable/bg_logout_button"
                 android:stateListAnimator="@null"
-                android:text="Logout"
-                android:textColor="#F44336" android:textSize="15sp" android:textStyle="bold" />
-
+                android:text="Logout" android:textColor="#F44336"
+                android:textSize="15sp" android:textStyle="bold"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

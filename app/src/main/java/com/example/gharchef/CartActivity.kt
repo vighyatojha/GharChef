@@ -14,11 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 data class CartItem(
-    val id: String = "",
-    val name: String = "",
-    val price: Double = 0.0,
-    val imageUrl: String = "",
-    var quantity: Int = 1
+    val id: String = "", val name: String = "",
+    val price: Double = 0.0, val imageUrl: String = "", var quantity: Int = 1
 )
 
 class CartActivity : AppCompatActivity() {
@@ -40,7 +37,7 @@ class CartActivity : AppCompatActivity() {
 
     private val cartItems = mutableListOf<CartItem>()
     private val DELIVERY_CHARGE = 40.0
-    private val TAX_RATE = 0.05  // 5%
+    private val TAX_RATE = 0.05
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,29 +65,25 @@ class CartActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() }
         setupBottomNavigation()
         loadCart()
-
         btnPlaceOrder.setOnClickListener { placeOrder() }
     }
 
     override fun onResume() { super.onResume(); loadCart() }
 
+    // ── STANDARD 5-TAB NAV ──────────────────────────────────────────────
     private fun setupBottomNavigation() {
         findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
             startActivity(Intent(this, ActivityHome::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         }
-        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
-        }
-        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener {
-            startActivity(Intent(this, OrdersActivity::class.java))
-        }
-        findViewById<LinearLayout>(R.id.navCart).setOnClickListener { /* already here */ }
+        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { startActivity(Intent(this, OrdersActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { /* already here */ }
+        findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
     }
 
     private fun loadCart() {
         val uid = auth.currentUser?.uid ?: run { showEmpty(); return }
         progressBar.visibility = View.VISIBLE
-
         db.collection("carts").document(uid).collection("items").get()
             .addOnSuccessListener { result ->
                 progressBar.visibility = View.GONE
@@ -114,18 +107,14 @@ class CartActivity : AppCompatActivity() {
         if (cartItems.isEmpty()) {
             showEmpty()
         } else {
-            tvEmptyCart.visibility   = View.GONE
-            scrollContent.visibility = View.VISIBLE
+            tvEmptyCart.visibility      = View.GONE
+            scrollContent.visibility    = View.VISIBLE
             layoutPlaceOrder.visibility = View.VISIBLE
-
             tvItemCount.text = "${cartItems.size} ITEM${if (cartItems.size > 1) "S" else ""} ADDED"
-
             rvCart.adapter = CartAdapter(cartItems,
                 onQuantityChanged = { updateTotals() },
                 onIncrement = { item -> updateQtyInDb(item) },
-                onDecrement = { item ->
-                    if (item.quantity == 0) removeFromCart(item) else updateQtyInDb(item)
-                },
+                onDecrement = { item -> if (item.quantity == 0) removeFromCart(item) else updateQtyInDb(item) },
                 onItemRemoved = { item -> removeFromCart(item) }
             )
             updateTotals()
@@ -142,7 +131,6 @@ class CartActivity : AppCompatActivity() {
         val subtotal = cartItems.sumOf { it.price * it.quantity }
         val tax      = subtotal * TAX_RATE
         val total    = subtotal + DELIVERY_CHARGE + tax
-
         tvSubtotal.text    = "₹%.0f".format(subtotal)
         tvDelivery.text    = "₹%.0f".format(DELIVERY_CHARGE)
         tvTax.text         = "₹%.2f".format(tax)
@@ -169,30 +157,22 @@ class CartActivity : AppCompatActivity() {
     private fun placeOrder() {
         val uid = auth.currentUser?.uid ?: return
         if (cartItems.isEmpty()) return
-
         btnPlaceOrder.isEnabled = false
         btnPlaceOrder.text = "Placing..."
-
         val subtotal = cartItems.sumOf { it.price * it.quantity }
         val tax      = subtotal * TAX_RATE
         val total    = subtotal + DELIVERY_CHARGE + tax
-
         val orderData = hashMapOf(
             "userId"         to uid,
             "items"          to cartItems.map { mapOf("name" to it.name, "price" to it.price, "quantity" to it.quantity, "imageUrl" to it.imageUrl) },
-            "subtotal"       to subtotal,
-            "deliveryCharge" to DELIVERY_CHARGE,
-            "tax"            to tax,
-            "totalAmount"    to total,
-            "status"         to "Confirmed",
-            "timestamp"      to System.currentTimeMillis()
+            "subtotal"       to subtotal, "deliveryCharge" to DELIVERY_CHARGE,
+            "tax"            to tax, "totalAmount" to total,
+            "status"         to "Confirmed", "timestamp" to System.currentTimeMillis()
         )
-
         db.collection("orders").add(orderData)
             .addOnSuccessListener { clearCart(uid) }
             .addOnFailureListener { e ->
-                btnPlaceOrder.isEnabled = true
-                btnPlaceOrder.text = "Place Order  ›"
+                btnPlaceOrder.isEnabled = true; btnPlaceOrder.text = "Place Order  ›"
                 Toast.makeText(this, "Order failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
@@ -204,10 +184,8 @@ class CartActivity : AppCompatActivity() {
             for (doc in docs) batch.delete(doc.reference)
             batch.commit().addOnSuccessListener {
                 Toast.makeText(this, "Order placed! 🎉", Toast.LENGTH_LONG).show()
-                cartItems.clear()
-                updateUI()
-                btnPlaceOrder.isEnabled = true
-                btnPlaceOrder.text = "Place Order  ›"
+                cartItems.clear(); updateUI()
+                btnPlaceOrder.isEnabled = true; btnPlaceOrder.text = "Place Order  ›"
             }
         }
     }
@@ -222,46 +200,39 @@ class CartAdapter(
 ) : RecyclerView.Adapter<CartAdapter.VH>() {
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
-        val ivImage:    ImageView = view.findViewById(R.id.ivCartItemImage)
-        val tvName:     TextView  = view.findViewById(R.id.tvItemName)
-        val tvPrice:    TextView  = view.findViewById(R.id.tvItemPrice)
-        val tvQty:      TextView  = view.findViewById(R.id.tvQuantity)
-        val btnMinus:   ImageView = view.findViewById(R.id.btnMinus)
-        val btnPlus:    ImageView = view.findViewById(R.id.btnPlus)
+        val ivImage:  ImageView = view.findViewById(R.id.ivCartItemImage)
+        val tvName:   TextView  = view.findViewById(R.id.tvItemName)
+        val tvPrice:  TextView  = view.findViewById(R.id.tvItemPrice)
+        val tvQty:    TextView  = view.findViewById(R.id.tvQuantity)
+        val btnMinus: ImageView = view.findViewById(R.id.btnMinus)
+        val btnPlus:  ImageView = view.findViewById(R.id.btnPlus)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         VH(LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false))
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        val item = items[position]
-        holder.tvName.text  = item.name
-        holder.tvPrice.text = "₹%.0f".format(item.price * item.quantity)
-        holder.tvQty.text   = item.quantity.toString()
-
-        if (item.imageUrl.isNotEmpty()) {
-            Glide.with(holder.itemView.context).load(item.imageUrl)
-                .placeholder(R.drawable.bg_image_placeholder).centerCrop().into(holder.ivImage)
-        }
-
-        holder.btnPlus.setOnClickListener {
-            item.quantity++
-            holder.tvQty.text   = item.quantity.toString()
-            holder.tvPrice.text = "₹%.0f".format(item.price * item.quantity)
-            onIncrement(item)
-            onQuantityChanged()
-        }
-
-        holder.btnMinus.setOnClickListener {
-            if (item.quantity > 1) {
-                item.quantity--
-                holder.tvQty.text   = item.quantity.toString()
-                holder.tvPrice.text = "₹%.0f".format(item.price * item.quantity)
-                onDecrement(item)
-                onQuantityChanged()
-            } else {
-                onItemRemoved(item)
+        val item = holder.run {
+            val i = items[adapterPosition]
+            tvName.text  = i.name
+            tvPrice.text = "₹%.0f".format(i.price * i.quantity)
+            tvQty.text   = i.quantity.toString()
+            if (i.imageUrl.isNotEmpty())
+                Glide.with(itemView.context).load(i.imageUrl)
+                    .placeholder(R.drawable.bg_image_placeholder).centerCrop().into(ivImage)
+            btnPlus.setOnClickListener {
+                i.quantity++; tvQty.text = i.quantity.toString()
+                tvPrice.text = "₹%.0f".format(i.price * i.quantity)
+                onIncrement(i); onQuantityChanged()
             }
+            btnMinus.setOnClickListener {
+                if (i.quantity > 1) {
+                    i.quantity--; tvQty.text = i.quantity.toString()
+                    tvPrice.text = "₹%.0f".format(i.price * i.quantity)
+                    onDecrement(i); onQuantityChanged()
+                } else { onItemRemoved(i) }
+            }
+            i
         }
     }
 

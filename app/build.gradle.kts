@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.gharchef"  // ← add this line
+    namespace = "com.example.gharchef"
     compileSdk = 36
 
     defaultConfig {
@@ -42,14 +42,14 @@ android {
 }
 
 dependencies {
-    //noinspection UseTomlInstead
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.androidx.activity)
 
-    // Firebase BOM — controls all firebase versions automatically
+    // Firebase BOM — controls all Firebase versions automatically
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
@@ -58,8 +58,13 @@ dependencies {
 
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
-    implementation(libs.androidx.activity)
-    implementation(libs.firebase.firestore)
+
+    // ── Google Maps SDK ───────────────────────────────────────────────
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
+    // ── Fused Location Provider (GPS) ────────────────────────────────
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation(libs.androidx.cardview)
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

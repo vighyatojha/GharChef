@@ -3,47 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="5dp"
     app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="3dp">
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView android:id="@+id/ivGridImage"
-            android:layout_width="match_parent" android:layout_height="120dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/bg_image_placeholder"
-            android:contentDescription="Dish" />
+        <FrameLayout android:layout_width="match_parent" android:layout_height="120dp">
+
+            <ImageView android:id="@+id/ivGridImage"
+                android:layout_width="match_parent" android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_image_placeholder"
+                android:contentDescription="Kit"/>
+
+            <!-- Cook time badge bottom-left -->
+            <TextView android:id="@+id/tvGridTime"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="8dp"
+                android:background="#CC000000"
+                android:paddingStart="7dp" android:paddingEnd="7dp"
+                android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:text="⏱ 20 mins"
+                android:textColor="#FFFFFF" android:textSize="10sp"/>
+
+            <!-- KIT badge top-right -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="8dp"
+                android:background="#E8871A"
+                android:paddingStart="8dp" android:paddingEnd="8dp"
+                android:paddingTop="3dp" android:paddingBottom="3dp"
+                android:text="KIT"
+                android:textColor="#FFFFFF" android:textSize="9sp" android:textStyle="bold"/>
+        </FrameLayout>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical" android:padding="10dp">
 
             <TextView android:id="@+id/tvGridName"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="Dish Name"
+                android:text="Kit Name"
                 android:textColor="#1A1A2E" android:textSize="13sp" android:textStyle="bold"
-                android:maxLines="2" android:ellipsize="end" />
-
-            <TextView android:id="@+id/tvGridTime"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="⏱ 20 mins"
-                android:textColor="#AAAAAA" android:textSize="11sp" />
+                android:maxLines="2" android:ellipsize="end" android:minLines="2"/>
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="6dp" android:orientation="horizontal" android:gravity="center_vertical">
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal" android:gravity="center_vertical">
+
                 <TextView android:id="@+id/tvGridPrice"
                     android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                    android:text="₹0" android:textColor="#E8871A" android:textSize="15sp" android:textStyle="bold" />
+                    android:text="₹0"
+                    android:textColor="#E8871A" android:textSize="15sp" android:textStyle="bold"/>
 
                 <Button android:id="@+id/btnAddGrid"
-                    android:layout_width="32dp" android:layout_height="32dp"
+                    android:layout_width="36dp" android:layout_height="36dp"
                     android:background="@drawable/bg_button_orange"
                     android:stateListAnimator="@null"
                     android:text="+"
-                    android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold" />
+                    android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold"
+                    android:padding="0dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

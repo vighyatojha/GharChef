@@ -47,7 +47,6 @@ class OrdersActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
 
         rvOrders.layoutManager = LinearLayoutManager(this)
-
         findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() }
         setupBottomNavigation()
 
@@ -66,24 +65,20 @@ class OrdersActivity : AppCompatActivity() {
         filterAndShow()
     }
 
+    // ── STANDARD 5-TAB NAV ──────────────────────────────────────────────
     private fun setupBottomNavigation() {
         findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
             startActivity(Intent(this, ActivityHome::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
         }
-        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
-        }
-        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener { /* already here */ }
-        findViewById<LinearLayout>(R.id.navFavs).setOnClickListener { /* optional */ }
-        findViewById<LinearLayout>(R.id.navProfile).setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-        }
+        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { /* already here */ }
+        findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
     }
 
     private fun loadOrders() {
         val uid = auth.currentUser?.uid ?: return
         progressBar.visibility = View.VISIBLE
-
         db.collection("orders").whereEqualTo("userId", uid).get()
             .addOnSuccessListener { result ->
                 progressBar.visibility = View.GONE
@@ -113,11 +108,11 @@ class OrdersActivity : AppCompatActivity() {
             if (showingCurrent) it.status in currentStatuses else it.status in pastStatuses
         }
         if (filtered.isEmpty()) {
-            rvOrders.visibility  = View.GONE
+            rvOrders.visibility   = View.GONE
             tvNoOrders.visibility = View.VISIBLE
             tvNoOrders.text = if (showingCurrent) "No active orders" else "No past orders"
         } else {
-            rvOrders.visibility  = View.VISIBLE
+            rvOrders.visibility   = View.VISIBLE
             tvNoOrders.visibility = View.GONE
             rvOrders.adapter = OrdersAdapter(filtered)
         }
@@ -144,9 +139,8 @@ class OrdersAdapter(private val orders: List<Order>) :
         val order = orders[position]
         holder.tvOrderId.text    = "Order #GC-${order.orderId.takeLast(4).uppercase()}"
         holder.tvOrderTotal.text = "₹%.2f".format(order.totalAmount)
-        holder.tvStatusBadge.text = "⏱ ${order.status.uppercase()}"
+        holder.tvStatusBadge.text = order.status.uppercase()
 
-        // Build items summary
         val itemsSummary = order.items.joinToString(", ") { item ->
             val qty  = (item["quantity"] as? Long)?.toInt() ?: 1
             val name = item["name"] as? String ?: ""
@@ -158,7 +152,6 @@ class OrdersAdapter(private val orders: List<Order>) :
             .format(java.util.Date(order.timestamp))
         holder.tvOrderDate.text = date
 
-        // Status badge color
         val badgeColor = when (order.status) {
             "Delivered"        -> "#4CAF50"
             "Cancelled"        -> "#F44336"
@@ -167,15 +160,12 @@ class OrdersAdapter(private val orders: List<Order>) :
             else               -> "#555555"
         }
         holder.tvStatusBadge.setBackgroundColor(Color.parseColor(badgeColor))
-        holder.tvStatusBadge.setBackgroundResource(R.drawable.bg_status_badge_orange)
 
-        // Load first item image if available
         val firstImageUrl = order.items.firstOrNull()?.get("imageUrl") as? String ?: ""
         if (firstImageUrl.isNotEmpty()) {
             Glide.with(holder.itemView.context).load(firstImageUrl)
                 .placeholder(R.drawable.bg_order_banner).centerCrop().into(holder.ivBanner)
         }
-
         holder.btnAction.text = if (order.status in listOf("Delivered", "Cancelled")) "Reorder" else "Track Order"
     }
 

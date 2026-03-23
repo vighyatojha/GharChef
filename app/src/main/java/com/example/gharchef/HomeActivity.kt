@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class ActivityHome : AppCompatActivity() {
 
@@ -25,11 +26,11 @@ class ActivityHome : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        db          = FirebaseFirestore.getInstance()
-        auth        = FirebaseAuth.getInstance()
-        rvPopular   = findViewById(R.id.rvPopularItems)
-        rvAll       = findViewById(R.id.rvAllItems)
-        tvGreeting  = findViewById(R.id.tvGreeting)
+        db         = FirebaseFirestore.getInstance()
+        auth       = FirebaseAuth.getInstance()
+        rvPopular  = findViewById(R.id.rvPopularItems)
+        rvAll      = findViewById(R.id.rvAllItems)
+        tvGreeting = findViewById(R.id.tvGreeting)
         progressBar = findViewById(R.id.progressBar)
 
         rvPopular.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -70,13 +71,10 @@ class ActivityHome : AppCompatActivity() {
 
     private fun loadMenuItems(category: String = "all") {
         progressBar.visibility = View.VISIBLE
-
         val query = if (category == "all")
             db.collection("menu").whereEqualTo("available", true)
         else
-            db.collection("menu")
-                .whereEqualTo("available", true)
-                .whereEqualTo("category", category)
+            db.collection("menu").whereEqualTo("available", true).whereEqualTo("category", category)
 
         query.get()
             .addOnSuccessListener { result ->
@@ -96,10 +94,8 @@ class ActivityHome : AppCompatActivity() {
                         popular     = doc.getBoolean("popular")    ?: false
                     )
                 }
-
                 rvPopular.adapter = PopularItemsAdapter(items.filter { it.popular }) { addToCart(it) }
                 rvAll.adapter     = AllItemsAdapter(items) { addToCart(it) }
-
                 try {
                     findViewById<TextView>(R.id.tvNoItems).visibility =
                         if (items.isEmpty()) View.VISIBLE else View.GONE
@@ -114,45 +110,38 @@ class ActivityHome : AppCompatActivity() {
     private fun addToCart(item: MenuItemData) {
         val uid = auth.currentUser?.uid ?: run {
             Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, LoginActivity::class.java))
-            return
+            startActivity(Intent(this, LoginActivity::class.java)); return
         }
-        val cartRef = db.collection("carts").document(uid).collection("items")
-        cartRef.whereEqualTo("name", item.name).get()
-            .addOnSuccessListener { result ->
-                if (result.documents.isNotEmpty()) {
-                    val doc = result.documents[0]
-                    doc.reference.update("quantity", (doc.getLong("quantity") ?: 1) + 1)
-                    Toast.makeText(this, "${item.name} quantity updated 🛒", Toast.LENGTH_SHORT).show()
-                } else {
-                    cartRef.add(hashMapOf(
-                        "name" to item.name, "price" to item.price,
-                        "imageUrl" to item.imageUrl, "quantity" to 1
-                    )).addOnSuccessListener {
-                        Toast.makeText(this, "${item.name} added to cart! 🛒", Toast.LENGTH_SHORT).show()
-                    }.addOnFailureListener {
-                        Toast.makeText(this, "Failed to add to cart", Toast.LENGTH_SHORT).show()
-                    }
+        val itemRef = db.collection("carts").document(uid).collection("items").document(item.id)
+        itemRef.get().addOnSuccessListener { doc ->
+            if (doc.exists()) {
+                itemRef.update("quantity", (doc.getLong("quantity") ?: 1) + 1)
+                Toast.makeText(this, "${item.name} quantity updated 🛒", Toast.LENGTH_SHORT).show()
+            } else {
+                itemRef.set(hashMapOf(
+                    "itemId" to item.id, "name" to item.name,
+                    "price" to item.price, "imageUrl" to item.imageUrl, "quantity" to 1
+                ), SetOptions.merge()).addOnSuccessListener {
+                    Toast.makeText(this, "${item.name} added to cart! 🛒", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
     }
 
+    // ── STANDARD 5-TAB NAV ──────────────────────────────────────────────
     private fun setupBottomNavigation() {
-        try {
-            findViewById<LinearLayout>(R.id.navHome).setOnClickListener    { /* already here */ }
-            findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) }
-            findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { startActivity(Intent(this, OrdersActivity::class.java)) }
-            findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) }
-        } catch (_: Exception) {}
+        findViewById<LinearLayout>(R.id.navHome).setOnClickListener    { /* already here */ }
+        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { startActivity(Intent(this, OrdersActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
     }
 }
 
-// ─── Popular Items Adapter (horizontal) ──────────────────────────────────────
 class PopularItemsAdapter(
     private val items: List<MenuItemData>,
     private val onAddToCart: (MenuItemData) -> Unit
 ) : RecyclerView.Adapter<PopularItemsAdapter.VH>() {
-
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val ivImage:  ImageView = view.findViewById(R.id.ivPopularImage)
         val tvName:   TextView  = view.findViewById(R.id.tvPopularName)
@@ -160,10 +149,8 @@ class PopularItemsAdapter(
         val tvRating: TextView  = view.findViewById(R.id.tvPopularRating)
         val btnAdd:   Button    = view.findViewById(R.id.btnAddPopular)
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         VH(LayoutInflater.from(parent.context).inflate(R.layout.item_popular_dish, parent, false))
-
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         holder.tvName.text   = item.name
@@ -174,16 +161,13 @@ class PopularItemsAdapter(
                 .placeholder(R.drawable.bg_image_placeholder).centerCrop().into(holder.ivImage)
         holder.btnAdd.setOnClickListener { onAddToCart(item) }
     }
-
     override fun getItemCount() = items.size
 }
 
-// ─── All Items Adapter (grid 2-col) ──────────────────────────────────────────
 class AllItemsAdapter(
     private val items: List<MenuItemData>,
     private val onAddToCart: (MenuItemData) -> Unit
 ) : RecyclerView.Adapter<AllItemsAdapter.VH>() {
-
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val ivImage: ImageView = view.findViewById(R.id.ivGridImage)
         val tvName:  TextView  = view.findViewById(R.id.tvGridName)
@@ -191,10 +175,8 @@ class AllItemsAdapter(
         val tvTime:  TextView  = view.findViewById(R.id.tvGridTime)
         val btnAdd:  Button    = view.findViewById(R.id.btnAddGrid)
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         VH(LayoutInflater.from(parent.context).inflate(R.layout.item_grid_dish, parent, false))
-
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         holder.tvName.text  = item.name
@@ -205,6 +187,5 @@ class AllItemsAdapter(
                 .placeholder(R.drawable.bg_image_placeholder).centerCrop().into(holder.ivImage)
         holder.btnAdd.setOnClickListener { onAddToCart(item) }
     }
-
     override fun getItemCount() = items.size
 }

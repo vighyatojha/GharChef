@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- ── PERMISSIONS ─────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,21 +17,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GharChef">
 
-        <activity android:name=".AdminOrdersActivity" android:exported="false" />
-        <activity android:name=".SearchActivity" android:exported="false" />
-        <activity android:name=".AdminDashboardActivity" />
-        <activity android:name=".AdminItemsActivity" />
-        <activity android:name=".AdminUsersActivity" />
-        <activity android:name=".AdminProfileActivity" />
-        <activity android:name=".CategoryMenuActivity" android:exported="false" />
-        <activity android:name=".ProfileActivity" android:exported="false" />
-        <activity android:name=".CartActivity" android:exported="false" />
-        <activity android:name=".OrdersActivity" android:exported="false" />
-        <activity android:name=".LocationActivity" android:exported="false" />
-        <activity android:name=".SignupActivity" android:exported="false" />
-        <activity android:name=".LoginActivity" android:exported="false" />
-        <activity android:name=".ActivityHome" android:exported="false" />
-        <activity android:name=".MainActivity" android:exported="true">
+        <!-- ── GOOGLE MAPS API KEY ──────────────────────────────────────
+             1. Go to https://console.cloud.google.com
+             2. Enable "Maps SDK for Android" and "Geocoding API"
+             3. Create an API Key → restrict to your package name
+             4. Replace YOUR_MAPS_API_KEY_HERE below
+        ─────────────────────────────────────────────────────────────── -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_MAPS_API_KEY_HERE" />
+
+        <activity android:name=".AdminOrdersActivity"    android:exported="false" />
+        <activity android:name=".SearchActivity"         android:exported="false" />
+        <activity android:name=".AdminDashboardActivity" android:exported="false" />
+        <activity android:name=".AdminItemsActivity"     android:exported="false" />
+        <activity android:name=".AdminUsersActivity"     android:exported="false" />
+        <activity android:name=".AdminProfileActivity"   android:exported="false" />
+        <activity android:name=".AdminUserOrdersActivity" android:exported="false" />
+        <activity android:name=".CategoryMenuActivity"   android:exported="false" />
+        <activity android:name=".ProfileActivity"        android:exported="false" />
+        <activity android:name=".CartActivity"           android:exported="false" />
+        <activity android:name=".OrdersActivity"         android:exported="false" />
+        <activity android:name=".LocationActivity"       android:exported="false" />
+        <activity android:name=".SignupActivity"         android:exported="false" />
+        <activity android:name=".LoginActivity"          android:exported="false" />
+        <activity android:name=".ActivityHome"           android:exported="false" />
+        <activity android:name=".MainActivity"           android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

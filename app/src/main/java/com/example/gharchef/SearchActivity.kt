@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class SearchActivity : AppCompatActivity() {
 
@@ -32,14 +33,15 @@ class SearchActivity : AppCompatActivity() {
         db          = FirebaseFirestore.getInstance()
         auth        = FirebaseAuth.getInstance()
         rvResults   = findViewById(R.id.rvSearchResults)
-        tvEmpty     = findViewById(R.id.tvSearchEmpty)   // LinearLayout in activity_search.xml
-        etSearch    = findViewById(R.id.etSearchQuery)   // correct ID from activity_search.xml
+        tvEmpty     = findViewById(R.id.tvSearchEmpty)
+        etSearch    = findViewById(R.id.etSearchQuery)
         progressBar = findViewById(R.id.progressBar)
 
         rvResults.layoutManager = LinearLayoutManager(this)
 
         try { findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() } } catch (_: Exception) {}
 
+        setupBottomNavigation()
         loadAllItems()
 
         etSearch.addTextChangedListener(object : TextWatcher {
@@ -48,6 +50,17 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
         etSearch.requestFocus()
+    }
+
+    // ── STANDARD 5-TAB NAV ──────────────────────────────────────────────
+    private fun setupBottomNavigation() {
+        findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
+            startActivity(Intent(this, ActivityHome::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        }
+        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { /* already here */ }
+        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { startActivity(Intent(this, OrdersActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) }
+        findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
     }
 
     private fun loadAllItems() {
@@ -59,8 +72,7 @@ class SearchActivity : AppCompatActivity() {
                 for (doc in result.documents) {
                     val name = doc.getString("name")?.takeIf { it.isNotEmpty() } ?: continue
                     allItems.add(MenuItemData(
-                        id          = doc.id,
-                        name        = name,
+                        id          = doc.id, name = name,
                         description = doc.getString("description") ?: "",
                         price       = doc.getDouble("price")       ?: 0.0,
                         imageUrl    = doc.getString("imageUrl")    ?: "",
@@ -84,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
         filteredItems.addAll(
             if (query.isEmpty()) allItems
             else allItems.filter {
-                it.name.contains(query, true)        ||
+                it.name.contains(query, true) ||
                         it.description.contains(query, true) ||
                         it.category.contains(query, true)
             }
@@ -102,28 +114,24 @@ class SearchActivity : AppCompatActivity() {
     private fun addToCart(item: MenuItemData) {
         val uid = auth.currentUser?.uid ?: run {
             Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, LoginActivity::class.java))
-            return
+            startActivity(Intent(this, LoginActivity::class.java)); return
         }
-        val ref = db.collection("carts").document(uid).collection("items")
-        ref.whereEqualTo("name", item.name).get()
-            .addOnSuccessListener { res ->
-                if (res.documents.isNotEmpty()) {
-                    val doc = res.documents[0]
-                    doc.reference.update("quantity", (doc.getLong("quantity") ?: 1) + 1)
-                    Toast.makeText(this, "${item.name} qty updated 🛒", Toast.LENGTH_SHORT).show()
-                } else {
-                    ref.add(hashMapOf(
-                        "name" to item.name, "price" to item.price,
-                        "imageUrl" to item.imageUrl, "quantity" to 1
-                    ))
-                    Toast.makeText(this, "${item.name} added to cart! 🛒", Toast.LENGTH_SHORT).show()
-                }
+        val itemRef = db.collection("carts").document(uid).collection("items").document(item.id)
+        itemRef.get().addOnSuccessListener { doc ->
+            if (doc.exists()) {
+                itemRef.update("quantity", (doc.getLong("quantity") ?: 1) + 1)
+                Toast.makeText(this, "${item.name} qty updated 🛒", Toast.LENGTH_SHORT).show()
+            } else {
+                itemRef.set(hashMapOf(
+                    "itemId" to item.id, "name" to item.name,
+                    "price" to item.price, "imageUrl" to item.imageUrl, "quantity" to 1
+                ), SetOptions.merge())
+                Toast.makeText(this, "${item.name} added to cart! 🛒", Toast.LENGTH_SHORT).show()
             }
+        }
     }
 }
 
-// ─── Search Results Adapter ───────────────────────────────────────────────────
 class SearchResultsAdapter(
     private val items: List<MenuItemData>,
     private val onAdd: (MenuItemData) -> Unit
