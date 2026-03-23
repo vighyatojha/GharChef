@@ -65,6 +65,7 @@ dependencies {
     // ── Fused Location Provider (GPS) ────────────────────────────────
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation(libs.androidx.cardview)
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -5,110 +5,221 @@
     android:layout_height="match_parent"
     android:background="#F5F0EA">
 
-    <!-- MAIN CONTENT -->
+    <!-- HEADER -->
+    <RelativeLayout android:id="@+id/header"
+        android:layout_width="match_parent" android:layout_height="60dp"
+        android:background="#FFFFFF" android:elevation="4dp"
+        android:paddingStart="16dp" android:paddingEnd="16dp">
+        <ImageView android:id="@+id/ivBack"
+            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back" android:background="@drawable/bg_back_button"
+            android:padding="8dp" android:contentDescription="Back"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Order Details" android:textColor="#1A1A2E"
+            android:textSize="18sp" android:textStyle="bold"/>
+    </RelativeLayout>
+
+    <!-- PROGRESS -->
+    <ProgressBar android:id="@+id/progressBar"
+        android:layout_width="match_parent" android:layout_height="3dp"
+        android:layout_below="@id/header"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true" android:indeterminateTint="#E8871A"
+        android:visibility="gone"/>
+
+    <!-- MAIN SCROLL -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/header"
         android:scrollbars="none">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
 
-            <!-- TOP BAR -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
-
-                <ImageView
-                    android:id="@+id/ivBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/bg_icon_btn"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_back"
-                    app:tint="#E8871A" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="Order Details"
-                    android:textColor="#1A1A2E"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-
-            <!-- ORDER SUMMARY -->
+            <!-- ORDER SUMMARY CARD -->
             <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="3dp">
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp" app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/tvDetailOrderId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Order #GC-XXXX"
-                        android:textStyle="bold"
-                        android:textSize="15sp" />
+                    <!-- Order ID row -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:id="@+id/tvDetailOrderId"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="Order #GC-XXXX"
+                                android:textColor="#1A1A2E" android:textSize="18sp" android:textStyle="bold"/>
+                            <TextView android:id="@+id/tvDetailDate"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Loading..."
+                                android:textColor="#AAAAAA" android:textSize="12sp"/>
+                        </LinearLayout>
+                        <!-- Status badge -->
+                        <TextView android:id="@+id/tvDetailStatus"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Confirmed"
+                            android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold"
+                            android:background="@drawable/bg_chip_selected"
+                            android:paddingStart="14dp" android:paddingEnd="14dp"
+                            android:paddingTop="6dp" android:paddingBottom="6dp"/>
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvDetailStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_chip_selected"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:text="Preparing"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp" />
+                    <!-- Divider -->
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="#F5F5F5" android:layout_marginTop="16dp" android:layout_marginBottom="16dp"/>
 
-                    <TextView
-                        android:id="@+id/tvDetailTotal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="₹0.00"
-                        android:textColor="#E8871A"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                    <!-- Total amount -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="ORDER TOTAL" android:textColor="#AAAAAA"
+                                android:textSize="10sp" android:textStyle="bold" android:letterSpacing="0.1"/>
+                            <TextView android:id="@+id/tvDetailTotal"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:text="₹0.00"
+                                android:textColor="#E8871A" android:textSize="24sp" android:textStyle="bold"
+                                android:layout_marginTop="2dp"/>
+                        </LinearLayout>
+                        <!-- Delivered icon -->
+                        <FrameLayout android:layout_width="48dp" android:layout_height="48dp"
+                            android:background="@drawable/bg_stat_icon_orange">
+                            <ImageView android:layout_width="26dp" android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_orders"
+                                app:tint="#E8871A"
+                                android:contentDescription="Order"/>
+                        </FrameLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" />
+            <!-- STATUS TIMELINE -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="20dp" app:cardElevation="4dp"
+                app:cardBackgroundColor="#FFFFFF">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:padding="20dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Order Progress" android:textColor="#1A1A2E"
+                        android:textSize="16sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
 
-            <!-- RECIPES CONTAINER -->
+                    <!-- Timeline row -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Confirmed -->
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <FrameLayout android:layout_width="36dp" android:layout_height="36dp"
+                                android:background="@drawable/bg_chip_selected">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="✓" android:textColor="#FFFFFF" android:textSize="14sp"/>
+                            </FrameLayout>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="Confirmed" android:textColor="#E8871A"
+                                android:textSize="10sp" android:textStyle="bold" android:gravity="center"/>
+                        </LinearLayout>
+
+                        <!-- Line -->
+                        <View android:layout_width="0dp" android:layout_height="2dp"
+                            android:layout_weight="0.5" android:layout_gravity="center_vertical"
+                            android:background="#E8871A"/>
+
+                        <!-- Preparing -->
+                        <LinearLayout android:id="@+id/stepPreparing"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <FrameLayout android:layout_width="36dp" android:layout_height="36dp"
+                                android:background="@drawable/bg_chip_unselected">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="🍳" android:textSize="16sp"/>
+                            </FrameLayout>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="Preparing" android:textColor="#AAAAAA"
+                                android:textSize="10sp" android:gravity="center"/>
+                        </LinearLayout>
+
+                        <!-- Line -->
+                        <View android:layout_width="0dp" android:layout_height="2dp"
+                            android:layout_weight="0.5" android:layout_gravity="center_vertical"
+                            android:background="#E0E0E0"/>
+
+                        <!-- Out for Delivery -->
+                        <LinearLayout android:id="@+id/stepDelivery"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <FrameLayout android:layout_width="36dp" android:layout_height="36dp"
+                                android:background="@drawable/bg_chip_unselected">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="🚴" android:textSize="16sp"/>
+                            </FrameLayout>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="On Way" android:textColor="#AAAAAA"
+                                android:textSize="10sp" android:gravity="center"/>
+                        </LinearLayout>
+
+                        <!-- Line -->
+                        <View android:layout_width="0dp" android:layout_height="2dp"
+                            android:layout_weight="0.5" android:layout_gravity="center_vertical"
+                            android:background="#E0E0E0"/>
+
+                        <!-- Delivered -->
+                        <LinearLayout android:id="@+id/stepDelivered"
+                            android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <FrameLayout android:layout_width="36dp" android:layout_height="36dp"
+                                android:background="@drawable/bg_chip_unselected">
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="🎉" android:textSize="16sp"/>
+                            </FrameLayout>
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="Delivered" android:textColor="#AAAAAA"
+                                android:textSize="10sp" android:gravity="center"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- RECIPE CARDS SECTION HEADER -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="📋 Your Meal Kit Recipes"
+                    android:textColor="#1A1A2E" android:textSize="18sp" android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- RECIPE CARDS CONTAINER (populated dynamically) -->
             <LinearLayout
                 android:id="@+id/recipeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:layout_marginTop="8dp" />
+                android:orientation="vertical" />
 
+            <View android:layout_width="match_parent" android:layout_height="24dp"/>
         </LinearLayout>
     </ScrollView>
-
 </RelativeLayout>

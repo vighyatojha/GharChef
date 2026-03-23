@@ -1,34 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- FULL SCREEN MAP -->
+    <!-- ── FULL SCREEN MAP (behind everything) ── -->
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-    <!-- HEADER OVERLAY -->
+    <!-- ── HEADER OVERLAY ── -->
     <RelativeLayout android:id="@+id/header"
-        android:layout_width="match_parent" android:layout_height="60dp"
-        android:background="#FFFFFF" android:elevation="4dp"
-        android:paddingStart="12dp" android:paddingEnd="12dp">
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+
         <ImageView android:id="@+id/ivBack"
             android:layout_width="36dp" android:layout_height="36dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_back" android:background="@drawable/bg_back_button"
-            android:padding="8dp" android:contentDescription="Back"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:src="@drawable/ic_back"
+            android:background="@drawable/bg_back_button"
+            android:padding="8dp"
+            android:contentDescription="Back" />
+
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Set Delivery Location" android:textColor="#1A1A2E"
-            android:textSize="17sp" android:textStyle="bold"/>
+            android:text="Set Delivery Location"
+            android:textColor="#1A1A2E"
+            android:textSize="17sp" android:textStyle="bold" />
     </RelativeLayout>
 
-    <!-- BOTTOM SHEET OVERLAY -->
+    <!-- ── CENTER PIN MARKER (floating over map, always centred) ── -->
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/ic_location_pin"
+        android:contentDescription="Center pin"
+        android:elevation="8dp" />
+
+    <!-- ── BOTTOM SHEET ── -->
     <LinearLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#FFFFFF"
         android:elevation="16dp"
@@ -37,65 +59,75 @@
         android:paddingTop="16dp" android:paddingBottom="28dp">
 
         <!-- Drag handle -->
-        <View android:layout_width="40dp" android:layout_height="4dp"
-            android:layout_gravity="center_horizontal" android:layout_marginBottom="16dp"
-            android:background="#DDDDDD"/>
+        <View
+            android:layout_width="40dp" android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="#DDDDDD" />
 
-        <!-- Address display -->
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        <!-- Section label -->
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="DELIVERY ADDRESS"
-            android:textColor="#E8871A" android:textSize="10sp" android:textStyle="bold"
-            android:letterSpacing="0.1" android:layout_marginBottom="6dp"/>
+            android:textColor="#E8871A"
+            android:textSize="10sp" android:textStyle="bold"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="8dp" />
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        <!-- Address row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_input_field"
-            android:orientation="horizontal" android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:padding="14dp">
-            <ImageView android:layout_width="20dp" android:layout_height="20dp"
-                android:src="@drawable/ic_back" app:tint="#E8871A"
-                android:contentDescription="Pin" android:layout_marginEnd="10dp"/>
+
+            <!-- Location pin icon -->
+            <ImageView
+                android:layout_width="20dp" android:layout_height="20dp"
+                android:src="@drawable/ic_location_pin"
+                android:contentDescription="Pin"
+                android:layout_marginEnd="10dp" />
+
             <TextView android:id="@+id/tvAddress"
                 android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Move the map to set your location"
-                android:textColor="#888888" android:textSize="14sp" android:maxLines="2"/>
+                android:textColor="#888888"
+                android:textSize="14sp"
+                android:maxLines="2" />
         </LinearLayout>
 
-        <!-- Progress bar while fetching -->
+        <!-- Progress bar while geocoding -->
         <ProgressBar android:id="@+id/progressBar"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"/>
+            android:layout_marginTop="6dp"
+            android:visibility="gone" />
 
-        <!-- GPS button -->
+        <!-- Use My Location button -->
         <Button android:id="@+id/btnMyLocation"
-            android:layout_width="match_parent" android:layout_height="52dp"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_logout_button"
             android:stateListAnimator="@null"
             android:text="📍  Use My Current Location"
-            android:textColor="#E8871A" android:textSize="14sp" android:textStyle="bold"/>
+            android:textColor="#E8871A"
+            android:textSize="14sp" android:textStyle="bold" />
 
-        <!-- Confirm button -->
+        <!-- Confirm Location button -->
         <Button android:id="@+id/btnConfirmLocation"
-            android:layout_width="match_parent" android:layout_height="56dp"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_button_orange"
             android:stateListAnimator="@null"
-            android:text="Confirm This Location"
-            android:textColor="#FFFFFF" android:textSize="15sp" android:textStyle="bold"/>
+            android:text="CONFIRM THIS LOCATION"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" android:textStyle="bold" />
     </LinearLayout>
-
-    <!-- CENTER PIN MARKER (always visible over map center) -->
-    <ImageView
-        android:layout_width="40dp" android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="40dp"
-        android:src="@drawable/ic_back"
-        app:tint="#E8871A"
-        android:contentDescription="Center pin"
-        android:elevation="8dp"/>
 
 </RelativeLayout>

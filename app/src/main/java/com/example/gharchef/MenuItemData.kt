@@ -7,15 +7,16 @@ data class MenuItemData(
     val price: Double               = 0.0,
     val imageUrl: String            = "",
     val category: String            = "",
-    val prepTime: String            = "20 mins",   // cooking time after receiving kit
+    val prepTime: String            = "20 mins",
     val rating: Double              = 4.0,
     val available: Boolean          = true,
     val popular: Boolean            = false,
+    val isVeg: Boolean              = true,
     // ── Meal Kit specific fields ──────────────────────────────────────
-    val serves: Int                 = 2,            // number of servings
-    val difficulty: String          = "Easy",       // Easy / Medium / Hard
-    val ingredients: String         = "",           // what's included in the kit (comma / newline separated)
-    val recipeSteps: String         = "",           // numbered steps, newline-separated
-    val cookware: String            = "",           // e.g. "Kadhai, Tawa, Rolling Pin"
-    val cookwareSubstitutes: String = ""            // e.g. "Kadhai → Deep non-stick pan"
+    val serves: Int                 = 2,
+    val difficulty: String          = "Easy",
+    val ingredients: String         = "",
+    val recipeSteps: String         = "",
+    val cookware: String            = "",
+    val cookwareSubstitutes: String = ""
 )

@@ -30,7 +30,7 @@ class OrdersActivity : AppCompatActivity() {
     private lateinit var tabPast: TextView
     private lateinit var progressBar: ProgressBar
 
-    private val allOrders = mutableListOf<Order>()
+    private val allOrders    = mutableListOf<Order>()
     private var showingCurrent = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,33 +47,32 @@ class OrdersActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
 
         rvOrders.layoutManager = LinearLayoutManager(this)
-        findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() }
+        try { findViewById<ImageView>(R.id.ivBack).setOnClickListener { finish() } } catch (_: Exception) {}
         setupBottomNavigation()
 
-        tabCurrent.setOnClickListener { setTab(true) }
-        tabPast.setOnClickListener { setTab(false) }
+        tabCurrent.setOnClickListener { setTab(true)  }
+        tabPast.setOnClickListener    { setTab(false) }
 
         loadOrders()
     }
 
     private fun setTab(isCurrent: Boolean) {
         showingCurrent = isCurrent
-        tabCurrent.setTextColor(if (isCurrent) Color.parseColor("#E8871A") else Color.parseColor("#AAAAAA"))
-        tabCurrent.setTypeface(null, if (isCurrent) android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+        tabCurrent.setTextColor(if (isCurrent)  Color.parseColor("#E8871A") else Color.parseColor("#AAAAAA"))
+        tabCurrent.setTypeface(null, if (isCurrent)  android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
         tabPast.setTextColor(if (!isCurrent) Color.parseColor("#E8871A") else Color.parseColor("#AAAAAA"))
         tabPast.setTypeface(null, if (!isCurrent) android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
         filterAndShow()
     }
 
-    // ── STANDARD 5-TAB NAV ──────────────────────────────────────────────
     private fun setupBottomNavigation() {
-        findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
-            startActivity(Intent(this, ActivityHome::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
-        }
-        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) }
-        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { /* already here */ }
-        findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) }
-        findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
+        try { findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
+            startActivity(Intent(this, ActivityHome::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)) }
+        } catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) } } catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { /* already here */ } } catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) } } catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) } } catch (_: Exception) {}
     }
 
     private fun loadOrders() {
@@ -88,8 +87,8 @@ class OrdersActivity : AppCompatActivity() {
                         orderId     = doc.id,
                         items       = (doc.get("items") as? List<Map<String, Any>>) ?: emptyList(),
                         totalAmount = doc.getDouble("totalAmount") ?: 0.0,
-                        status      = doc.getString("status") ?: "Confirmed",
-                        timestamp   = doc.getLong("timestamp") ?: 0L
+                        status      = doc.getString("status")      ?: "Confirmed",
+                        timestamp   = doc.getLong("timestamp")     ?: 0L
                     ))
                 }
                 allOrders.sortByDescending { it.timestamp }
@@ -110,26 +109,36 @@ class OrdersActivity : AppCompatActivity() {
         if (filtered.isEmpty()) {
             rvOrders.visibility   = View.GONE
             tvNoOrders.visibility = View.VISIBLE
-            tvNoOrders.text = if (showingCurrent) "No active orders" else "No past orders"
+            tvNoOrders.text = if (showingCurrent) "No active orders 🎉" else "No past orders yet"
         } else {
             rvOrders.visibility   = View.VISIBLE
             tvNoOrders.visibility = View.GONE
-            rvOrders.adapter = OrdersAdapter(filtered)
+            rvOrders.adapter = OrdersAdapter(filtered) { order ->
+                startActivity(
+                    Intent(this, OrderDetailActivity::class.java)
+                        .putExtra("orderId",     order.orderId)
+                        .putExtra("orderTotal",  order.totalAmount)
+                        .putExtra("orderStatus", order.status)
+                        .putExtra("timestamp",   order.timestamp)
+                )
+            }
         }
     }
 }
 
-class OrdersAdapter(private val orders: List<Order>) :
-    RecyclerView.Adapter<OrdersAdapter.VH>() {
+class OrdersAdapter(
+    private val orders: List<Order>,
+    private val onOrderClick: (Order) -> Unit
+) : RecyclerView.Adapter<OrdersAdapter.VH>() {
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
-        val ivBanner:     ImageView = view.findViewById(R.id.ivOrderBanner)
-        val tvStatusBadge:TextView  = view.findViewById(R.id.tvStatusBadge)
-        val tvOrderId:    TextView  = view.findViewById(R.id.tvOrderId)
-        val tvOrderTotal: TextView  = view.findViewById(R.id.tvOrderTotal)
-        val tvOrderItems: TextView  = view.findViewById(R.id.tvOrderItems)
-        val tvOrderDate:  TextView  = view.findViewById(R.id.tvOrderDate)
-        val btnAction:    Button    = view.findViewById(R.id.btnOrderAction)
+        val ivBanner:      ImageView = view.findViewById(R.id.ivOrderBanner)
+        val tvStatusBadge: TextView  = view.findViewById(R.id.tvStatusBadge)
+        val tvOrderId:     TextView  = view.findViewById(R.id.tvOrderId)
+        val tvOrderTotal:  TextView  = view.findViewById(R.id.tvOrderTotal)
+        val tvOrderItems:  TextView  = view.findViewById(R.id.tvOrderItems)
+        val tvOrderDate:   TextView  = view.findViewById(R.id.tvOrderDate)
+        val btnAction:     android.widget.Button = view.findViewById(R.id.btnOrderAction)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -148,9 +157,9 @@ class OrdersAdapter(private val orders: List<Order>) :
         }
         holder.tvOrderItems.text = itemsSummary.ifEmpty { "${order.items.size} item(s)" }
 
-        val date = java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a", java.util.Locale.getDefault())
-            .format(java.util.Date(order.timestamp))
-        holder.tvOrderDate.text = date
+        val sdf = java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a", java.util.Locale.getDefault())
+        holder.tvOrderDate.text = if (order.timestamp > 0)
+            sdf.format(java.util.Date(order.timestamp)) else "—"
 
         val badgeColor = when (order.status) {
             "Delivered"        -> "#4CAF50"
@@ -159,14 +168,17 @@ class OrdersAdapter(private val orders: List<Order>) :
             "Preparing"        -> "#FF9800"
             else               -> "#555555"
         }
-        holder.tvStatusBadge.setBackgroundColor(Color.parseColor(badgeColor))
+        holder.tvStatusBadge.setBackgroundColor(android.graphics.Color.parseColor(badgeColor))
 
         val firstImageUrl = order.items.firstOrNull()?.get("imageUrl") as? String ?: ""
         if (firstImageUrl.isNotEmpty()) {
             Glide.with(holder.itemView.context).load(firstImageUrl)
                 .placeholder(R.drawable.bg_order_banner).centerCrop().into(holder.ivBanner)
         }
-        holder.btnAction.text = if (order.status in listOf("Delivered", "Cancelled")) "Reorder" else "Track Order"
+
+        holder.btnAction.text = if (order.status in listOf("Delivered", "Cancelled")) "View Recipe" else "Track Order"
+        holder.btnAction.setOnClickListener  { onOrderClick(order) }
+        holder.itemView.setOnClickListener   { onOrderClick(order) }
     }
 
     override fun getItemCount() = orders.size

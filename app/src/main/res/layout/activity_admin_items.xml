@@ -54,7 +54,7 @@
             android:padding="8dp" android:contentDescription="Search" />
     </RelativeLayout>
 
-    <!-- SEARCH BAR (hidden by default, shown when search tapped) -->
+    <!-- SEARCH BAR -->
     <RelativeLayout android:id="@+id/searchBar"
         android:layout_width="match_parent" android:layout_height="52dp"
         android:layout_below="@id/header"
@@ -68,39 +68,66 @@
             android:layout_width="match_parent" android:layout_height="match_parent"
             android:layout_marginStart="32dp"
             android:background="@null"
-            android:hint="Search dishes..." android:textColorHint="#BBBBBB"
+            android:hint="Search dishes by name, category..." android:textColorHint="#BBBBBB"
             android:inputType="text" android:textColor="#1A1A2E" android:textSize="14sp" />
     </RelativeLayout>
 
-    <!-- CATEGORY TABS -->
+    <!-- CATEGORY TABS — horizontal scroll with all 8 categories -->
     <HorizontalScrollView android:id="@+id/tabsScroll"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_below="@id/searchBar"
         android:background="#FFFFFF"
         android:scrollbars="none">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="50dp"
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="52dp"
             android:orientation="horizontal" android:paddingStart="16dp" android:paddingEnd="16dp">
+
             <TextView android:id="@+id/tabAll"
                 android:layout_width="wrap_content" android:layout_height="match_parent"
-                android:gravity="center" android:text="All Items"
-                android:textColor="#E8871A" android:textSize="14sp" android:textStyle="bold"
-                android:layout_marginEnd="24dp"
-                android:paddingBottom="4dp"
+                android:gravity="center" android:text="All"
+                android:textColor="#E8871A" android:textSize="13sp" android:textStyle="bold"
+                android:layout_marginEnd="20dp"
                 android:background="@drawable/tab_indicator_bottom" />
+
             <TextView android:id="@+id/tabMainCourse"
                 android:layout_width="wrap_content" android:layout_height="match_parent"
-                android:gravity="center" android:text="Main Course"
-                android:textColor="#AAAAAA" android:textSize="14sp"
-                android:layout_marginEnd="24dp" />
+                android:gravity="center" android:text="North Indian"
+                android:textColor="#AAAAAA" android:textSize="13sp"
+                android:layout_marginEnd="20dp" />
+
+            <TextView android:id="@+id/tabSouthIndian"
+                android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:gravity="center" android:text="South Indian"
+                android:textColor="#AAAAAA" android:textSize="13sp"
+                android:layout_marginEnd="20dp" />
+
+            <TextView android:id="@+id/tabWestIndian"
+                android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:gravity="center" android:text="West Indian"
+                android:textColor="#AAAAAA" android:textSize="13sp"
+                android:layout_marginEnd="20dp" />
+
+            <TextView android:id="@+id/tabEastIndian"
+                android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:gravity="center" android:text="East Indian"
+                android:textColor="#AAAAAA" android:textSize="13sp"
+                android:layout_marginEnd="20dp" />
+
+            <TextView android:id="@+id/tabChinese"
+                android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:gravity="center" android:text="Chinese"
+                android:textColor="#AAAAAA" android:textSize="13sp"
+                android:layout_marginEnd="20dp" />
+
             <TextView android:id="@+id/tabSnacks"
                 android:layout_width="wrap_content" android:layout_height="match_parent"
-                android:gravity="center" android:text="Snacks"
-                android:textColor="#AAAAAA" android:textSize="14sp"
-                android:layout_marginEnd="24dp" />
+                android:gravity="center" android:text="Street Food"
+                android:textColor="#AAAAAA" android:textSize="13sp"
+                android:layout_marginEnd="20dp" />
+
             <TextView android:id="@+id/tabDesserts"
                 android:layout_width="wrap_content" android:layout_height="match_parent"
                 android:gravity="center" android:text="Desserts"
-                android:textColor="#AAAAAA" android:textSize="14sp" />
+                android:textColor="#AAAAAA" android:textSize="13sp" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -117,7 +144,8 @@
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_below="@id/tabsScroll" android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:text="No items yet. Tap + to add." android:textColor="#AAAAAA" android:textSize="15sp"
+        android:text="No items yet. Tap + to add."
+        android:textColor="#AAAAAA" android:textSize="15sp"
         android:visibility="gone" />
 
     <!-- RECYCLER -->
@@ -129,7 +157,7 @@
         android:paddingTop="8dp" android:paddingBottom="80dp"
         android:clipToPadding="false" />
 
-    <!-- FAB ADD -->
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddItem"
         android:layout_width="wrap_content" android:layout_height="wrap_content"

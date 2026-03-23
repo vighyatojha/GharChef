@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FDF6EC">
+
+    <!-- ── FIXED BOTTOM BAR ── -->
+    <LinearLayout android:id="@+id/bottomBarDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF"
+        android:elevation="12dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp" android:paddingEnd="20dp"
+        android:paddingTop="14dp" android:paddingBottom="14dp">
+
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="PRICE"
+                android:textColor="#B5A99F" android:textSize="10sp"
+                android:textStyle="bold" android:letterSpacing="0.1"/>
+            <TextView android:id="@+id/tvDetailPrice"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="₹0"
+                android:textColor="#E8871A" android:textSize="24sp" android:textStyle="bold"/>
+        </LinearLayout>
+
+        <Button android:id="@+id/btnDetailAddToCart"
+            android:layout_width="0dp" android:layout_height="52dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/bg_button_orange"
+            android:stateListAnimator="@null"
+            android:text="Add to Cart"
+            android:textColor="#FFFFFF" android:textSize="15sp" android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- ── SCROLL CONTENT ── -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomBarDetail"
+        android:scrollbars="none">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- HERO IMAGE -->
+            <FrameLayout android:layout_width="match_parent" android:layout_height="290dp">
+
+                <ImageView android:id="@+id/ivDetailHero"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bg_login_header"
+                    android:contentDescription="Kit image" />
+
+                <!-- Gradient overlay (bottom-heavy so text is readable) -->
+                <View android:layout_width="match_parent" android:layout_height="match_parent"
+                    android:background="@drawable/bg_hero_gradient_overlay" />
+
+                <!-- Back button — top left -->
+                <ImageView android:id="@+id/ivDetailBack"
+                    android:layout_width="40dp" android:layout_height="40dp"
+                    android:layout_margin="14dp"
+                    android:background="@drawable/bg_back_button"
+                    android:src="@drawable/ic_back"
+                    android:padding="8dp"
+                    android:contentDescription="Back" />
+
+                <!-- Category badge — bottom left -->
+                <TextView android:id="@+id/tvDetailCategory"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="18dp"
+                    android:background="@drawable/bg_chip_selected"
+                    android:paddingStart="12dp" android:paddingEnd="12dp"
+                    android:paddingTop="5dp" android:paddingBottom="5dp"
+                    android:text="North Indian"
+                    android:textColor="#FFFFFF" android:textSize="11sp" android:textStyle="bold" />
+
+                <!-- Rating badge — bottom right -->
+                <TextView android:id="@+id/tvDetailRating"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="18dp"
+                    android:background="#CC000000"
+                    android:paddingStart="10dp" android:paddingEnd="10dp"
+                    android:paddingTop="5dp" android:paddingBottom="5dp"
+                    android:text="⭐ 4.5"
+                    android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- ── WHITE DETAIL CARD (overlaps hero) ── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_form_card_top_rounded"
+                android:layout_marginTop="-24dp"
+                android:paddingStart="22dp"
+                android:paddingEnd="22dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp">
+
+                <!-- NAME -->
+                <TextView android:id="@+id/tvDetailName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kit Name"
+                    android:textColor="#1A1A2E"
+                    android:textSize="24sp" android:textStyle="bold"
+                    android:fontFamily="serif" />
+
+                <!-- META BADGES -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    app:flexWrap="wrap">
+
+                    <TextView android:id="@+id/tvDetailPrepTime"
+                        android:layout_width="wrap_content" android:layout_height="34dp"
+                        android:background="@drawable/bg_prefix_chip"
+                        android:gravity="center"
+                        android:paddingStart="12dp" android:paddingEnd="12dp"
+                        android:text="⏱  20 mins"
+                        android:textColor="#4A3728" android:textSize="12sp" android:textStyle="bold"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView android:id="@+id/tvDetailDifficulty"
+                        android:layout_width="wrap_content" android:layout_height="34dp"
+                        android:background="@drawable/bg_prefix_chip"
+                        android:gravity="center"
+                        android:paddingStart="12dp" android:paddingEnd="12dp"
+                        android:text="Easy"
+                        android:textColor="#4A3728" android:textSize="12sp" android:textStyle="bold"
+                        android:layout_marginEnd="8dp" />
+
+                    <TextView android:id="@+id/tvDetailServes"
+                        android:layout_width="wrap_content" android:layout_height="34dp"
+                        android:background="@drawable/bg_prefix_chip"
+                        android:gravity="center"
+                        android:paddingStart="12dp" android:paddingEnd="12dp"
+                        android:text="🍽  Serves 2"
+                        android:textColor="#4A3728" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- DESCRIPTION -->
+                <TextView android:id="@+id/tvDetailDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Description goes here."
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:lineSpacingMultiplier="1.55" />
+
+                <!-- ── INGREDIENTS SECTION ── -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="#F0E8DC"
+                    android:layout_marginTop="22dp" android:layout_marginBottom="16dp" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="WHAT'S IN YOUR KIT"
+                            android:textColor="#C0956A" android:textSize="11sp"
+                            android:textStyle="bold" android:letterSpacing="0.1"/>
+                        <View android:layout_width="28dp" android:layout_height="2dp"
+                            android:layout_marginTop="3dp"
+                            android:background="#E8871A"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:background="@drawable/bg_prefix_chip"
+                        android:paddingStart="10dp" android:paddingEnd="10dp"
+                        android:paddingTop="4dp" android:paddingBottom="4dp"
+                        android:text="Pre-measured"
+                        android:textColor="#C0956A" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/detailIngredientsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_input_field"
+                    android:padding="14dp" />
+
+                <!-- ── RECIPE STEPS SECTION ── -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="#F0E8DC"
+                    android:layout_marginTop="22dp" android:layout_marginBottom="16dp" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp">
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="HOW TO COOK"
+                            android:textColor="#C0956A" android:textSize="11sp"
+                            android:textStyle="bold" android:letterSpacing="0.1"/>
+                        <View android:layout_width="28dp" android:layout_height="2dp"
+                            android:layout_marginTop="3dp"
+                            android:background="#E8871A"/>
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:background="@drawable/bg_prefix_chip"
+                        android:paddingStart="10dp" android:paddingEnd="10dp"
+                        android:paddingTop="4dp" android:paddingBottom="4dp"
+                        android:text="Step by step"
+                        android:textColor="#C0956A" android:textSize="11sp" android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout android:id="@+id/detailStepsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="4dp"/>
+
+                <!-- ── COOKWARE SECTION ── -->
+                <LinearLayout android:id="@+id/cookwareSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="#F0E8DC"
+                        android:layout_marginTop="22dp" android:layout_marginBottom="16dp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="12dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="COOKWARE NEEDED"
+                            android:textColor="#C0956A" android:textSize="11sp"
+                            android:textStyle="bold" android:letterSpacing="0.1"/>
+                        <View android:layout_width="28dp" android:layout_height="2dp"
+                            android:layout_marginTop="3dp"
+                            android:background="#E8871A"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:background="@drawable/bg_input_field"
+                        android:orientation="vertical" android:padding="14dp">
+                        <TextView android:id="@+id/tvDetailCookware"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="Pan"
+                            android:textColor="#1A1A2E" android:textSize="14sp" android:textStyle="bold"/>
+                        <TextView android:id="@+id/tvDetailCookwareSubs"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="Substitutes..."
+                            android:textColor="#9A8F85" android:textSize="12sp"
+                            android:lineSpacingMultiplier="1.4"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="8dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

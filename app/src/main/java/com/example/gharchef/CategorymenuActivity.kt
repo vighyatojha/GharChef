@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -48,15 +49,14 @@ class CategoryMenuActivity : AppCompatActivity() {
         loadMenuItems(categoryKey)
     }
 
-    // ── STANDARD 5-TAB NAV ──────────────────────────────────────────────
     private fun setupBottomNavigation() {
-        findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
+        try { findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
             startActivity(Intent(this, ActivityHome::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
-        }
-        findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) }
-        findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { startActivity(Intent(this, OrdersActivity::class.java)) }
-        findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) }
-        findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
+        }} catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) } } catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { startActivity(Intent(this, OrdersActivity::class.java)) } } catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) } } catch (_: Exception) {}
+        try { findViewById<LinearLayout>(R.id.navProfile).setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) } } catch (_: Exception) {}
     }
 
     private fun loadMenuItems(categoryKey: String) {
@@ -75,15 +75,21 @@ class CategoryMenuActivity : AppCompatActivity() {
                 menuItems.clear()
                 for (doc in result.documents) {
                     val item = MenuItemData(
-                        id          = doc.id,
-                        name        = doc.getString("name")        ?: "",
-                        description = doc.getString("description") ?: "",
-                        price       = doc.getDouble("price")       ?: 0.0,
-                        imageUrl    = doc.getString("imageUrl")    ?: "",
-                        category    = doc.getString("category")    ?: "",
-                        prepTime    = doc.getString("prepTime")    ?: "20 mins",
-                        rating      = doc.getDouble("rating")      ?: 4.0,
-                        available   = doc.getBoolean("available")  ?: true
+                        id                  = doc.id,
+                        name                = doc.getString("name")                ?: "",
+                        description         = doc.getString("description")         ?: "",
+                        price               = doc.getDouble("price")               ?: 0.0,
+                        imageUrl            = doc.getString("imageUrl")            ?: "",
+                        category            = doc.getString("category")            ?: "",
+                        prepTime            = doc.getString("prepTime")            ?: "20 mins",
+                        rating              = doc.getDouble("rating")              ?: 4.0,
+                        available           = doc.getBoolean("available")          ?: true,
+                        serves              = (doc.getLong("serves")?.toInt())     ?: 2,
+                        difficulty          = doc.getString("difficulty")          ?: "Easy",
+                        ingredients         = doc.getString("ingredients")         ?: "",
+                        recipeSteps         = doc.getString("recipeSteps")         ?: "",
+                        cookware            = doc.getString("cookware")            ?: "",
+                        cookwareSubstitutes = doc.getString("cookwareSubstitutes") ?: ""
                     )
                     if (item.name.isNotEmpty()) menuItems.add(item)
                 }
@@ -93,7 +99,11 @@ class CategoryMenuActivity : AppCompatActivity() {
                 } else {
                     tvEmpty.visibility = View.GONE
                     rvMenu.visibility  = View.VISIBLE
-                    rvMenu.adapter     = MenuItemAdapter(menuItems) { addToCart(it) }
+                    rvMenu.adapter = MenuItemAdapter(
+                        menuItems,
+                        onAddToCart = { addToCart(it) },
+                        onItemClick = { openKitDetail(it) }
+                    )
                 }
             }
             .addOnFailureListener { e ->
@@ -102,6 +112,25 @@ class CategoryMenuActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to load menu", Toast.LENGTH_SHORT).show()
                 tvEmpty.visibility = View.VISIBLE
             }
+    }
+
+    private fun openKitDetail(item: MenuItemData) {
+        startActivity(Intent(this, MealKitDetailActivity::class.java).apply {
+            putExtra("ITEM_ID",            item.id)
+            putExtra("ITEM_NAME",          item.name)
+            putExtra("ITEM_PRICE",         item.price)
+            putExtra("ITEM_IMAGE",         item.imageUrl)
+            putExtra("ITEM_DESC",          item.description)
+            putExtra("ITEM_RATING",        item.rating)
+            putExtra("ITEM_PREP_TIME",     item.prepTime)
+            putExtra("ITEM_CATEGORY",      item.category)
+            putExtra("ITEM_INGREDIENTS",   item.ingredients)
+            putExtra("ITEM_STEPS",         item.recipeSteps)
+            putExtra("ITEM_COOKWARE",      item.cookware)
+            putExtra("ITEM_COOKWARE_SUBS", item.cookwareSubstitutes)
+            putExtra("ITEM_SERVES",        item.serves)
+            putExtra("ITEM_DIFFICULTY",    item.difficulty)
+        })
     }
 
     private fun addToCart(item: MenuItemData) {
@@ -129,9 +158,11 @@ class CategoryMenuActivity : AppCompatActivity() {
     }
 }
 
+// ── Menu Item Adapter ──────────────────────────────────────────────────
 class MenuItemAdapter(
     private val items: List<MenuItemData>,
-    private val onAddToCart: (MenuItemData) -> Unit
+    private val onAddToCart: (MenuItemData) -> Unit,
+    private val onItemClick: (MenuItemData) -> Unit
 ) : RecyclerView.Adapter<MenuItemAdapter.MenuViewHolder>() {
 
     inner class MenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -153,7 +184,8 @@ class MenuItemAdapter(
         holder.tvPrice.text    = "₹%.2f".format(item.price)
         holder.tvPrepTime.text = "⏱ ${item.prepTime}"
         holder.tvRating.text   = "★ ${"%.1f".format(item.rating)}"
-        holder.btnAdd.setOnClickListener { onAddToCart(item) }
+        holder.btnAdd.setOnClickListener   { onAddToCart(item) }
+        holder.itemView.setOnClickListener { onItemClick(item) }
     }
 
     override fun getItemCount() = items.size

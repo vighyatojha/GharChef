@@ -23,8 +23,8 @@
         <!-- Image URL input -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Image URL" android:textColor="#888888"
-            android:textSize="12sp" android:textStyle="bold" />
+            android:text="IMAGE URL" android:textColor="#E8871A"
+            android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
         <EditText android:id="@+id/etItemImageUrl"
             android:layout_width="match_parent" android:layout_height="48dp"
             android:layout_marginTop="4dp"
@@ -37,13 +37,13 @@
         <!-- Dish Name -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="Dish Name" android:textColor="#1A1A2E"
-            android:textSize="14sp" android:textStyle="bold" />
+            android:text="DISH NAME *" android:textColor="#E8871A"
+            android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
         <EditText android:id="@+id/etItemName"
             android:layout_width="match_parent" android:layout_height="52dp"
             android:layout_marginTop="6dp"
             android:background="@drawable/bg_input_field"
-            android:hint="e.g. Paneer Butter Masala" android:textColorHint="#BBBBBB"
+            android:hint="e.g. Paneer Butter Masala Kit" android:textColorHint="#BBBBBB"
             android:inputType="textCapWords"
             android:paddingStart="14dp" android:paddingEnd="14dp"
             android:textColor="#1A1A2E" android:textSize="14sp" />
@@ -51,13 +51,13 @@
         <!-- Description -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:text="Description" android:textColor="#1A1A2E"
-            android:textSize="14sp" android:textStyle="bold" />
+            android:text="SHORT DESCRIPTION" android:textColor="#E8871A"
+            android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
         <EditText android:id="@+id/etItemDesc"
             android:layout_width="match_parent" android:layout_height="80dp"
             android:layout_marginTop="6dp"
             android:background="@drawable/bg_input_field"
-            android:hint="Rich description of the dish..."
+            android:hint="Brief description shown on menu cards..."
             android:textColorHint="#BBBBBB"
             android:inputType="textMultiLine|textCapSentences"
             android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="12dp"
@@ -71,8 +71,8 @@
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:layout_marginEnd="8dp" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Price (₹)" android:textColor="#1A1A2E"
-                    android:textSize="14sp" android:textStyle="bold" />
+                    android:text="PRICE (₹) *" android:textColor="#E8871A"
+                    android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
                 <EditText android:id="@+id/etItemPrice"
                     android:layout_width="match_parent" android:layout_height="52dp"
                     android:layout_marginTop="6dp"
@@ -85,8 +85,8 @@
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:layout_marginStart="8dp" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Category" android:textColor="#1A1A2E"
-                    android:textSize="14sp" android:textStyle="bold" />
+                    android:text="CATEGORY" android:textColor="#E8871A"
+                    android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
                 <Spinner android:id="@+id/spinnerCategory"
                     android:layout_width="match_parent" android:layout_height="52dp"
                     android:layout_marginTop="6dp"
@@ -102,13 +102,13 @@
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:layout_marginEnd="8dp" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Prep Time (min)" android:textColor="#1A1A2E"
-                    android:textSize="14sp" android:textStyle="bold" />
+                    android:text="PREP TIME" android:textColor="#E8871A"
+                    android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
                 <EditText android:id="@+id/etItemPrepTime"
                     android:layout_width="match_parent" android:layout_height="52dp"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/bg_input_field"
-                    android:hint="30 mins" android:textColorHint="#BBBBBB"
+                    android:hint="e.g. 25 mins" android:textColorHint="#BBBBBB"
                     android:inputType="text"
                     android:paddingStart="14dp" android:paddingEnd="14dp"
                     android:textColor="#1A1A2E" android:textSize="14sp" />
@@ -116,8 +116,8 @@
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:layout_marginStart="8dp" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Avg. Rating" android:textColor="#1A1A2E"
-                    android:textSize="14sp" android:textStyle="bold" />
+                    android:text="AVG RATING" android:textColor="#E8871A"
+                    android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
                 <EditText android:id="@+id/etItemRating"
                     android:layout_width="match_parent" android:layout_height="52dp"
                     android:layout_marginTop="6dp"
@@ -129,19 +129,149 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Available toggle -->
+        <!-- Serves + Difficulty -->
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
+            android:orientation="horizontal" android:weightSum="2">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:layout_marginEnd="8dp" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="SERVES (PEOPLE)" android:textColor="#E8871A"
+                    android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
+                <EditText android:id="@+id/etItemServes"
+                    android:layout_width="match_parent" android:layout_height="52dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input_field"
+                    android:hint="2" android:textColorHint="#BBBBBB"
+                    android:inputType="number"
+                    android:paddingStart="14dp" android:paddingEnd="14dp"
+                    android:textColor="#1A1A2E" android:textSize="14sp" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:layout_marginStart="8dp" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="DIFFICULTY" android:textColor="#E8871A"
+                    android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
+                <Spinner android:id="@+id/spinnerDifficulty"
+                    android:layout_width="match_parent" android:layout_height="52dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input_field"
+                    android:paddingStart="10dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#F0F0F0" android:layout_marginTop="18dp" android:layout_marginBottom="12dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="📦 KIT CONTENTS"
+            android:textColor="#1A1A2E" android:textSize="14sp" android:textStyle="bold"/>
+
+        <!-- Ingredients -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="INGREDIENTS (one per line)" android:textColor="#E8871A"
+            android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
+        <EditText android:id="@+id/etItemIngredients"
+            android:layout_width="match_parent" android:layout_height="120dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="e.g.\nMarinated Paneer Cubes (200g)\nTomato-Cashew Puree (200ml)\nFresh Cream Sachet (30ml)"
+            android:textColorHint="#BBBBBB"
+            android:inputType="textMultiLine|textCapSentences"
+            android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="12dp"
+            android:textColor="#1A1A2E" android:textSize="13sp"
+            android:gravity="top" />
+
+        <!-- Cookware -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="COOKWARE NEEDED" android:textColor="#E8871A"
+            android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
+        <EditText android:id="@+id/etItemCookware"
+            android:layout_width="match_parent" android:layout_height="52dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="e.g. Heavy-bottom pan, Pressure Cooker"
+            android:textColorHint="#BBBBBB"
+            android:inputType="textCapSentences"
+            android:paddingStart="14dp" android:paddingEnd="14dp"
+            android:textColor="#1A1A2E" android:textSize="13sp"/>
+
+        <!-- Cookware Substitutes -->
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="COOKWARE SUBSTITUTES" android:textColor="#E8871A"
+            android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
+        <EditText android:id="@+id/etItemCookwareSubs"
+            android:layout_width="match_parent" android:layout_height="52dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="e.g. Kadhai → Any deep non-stick pan"
+            android:textColorHint="#BBBBBB"
+            android:inputType="textCapSentences"
+            android:paddingStart="14dp" android:paddingEnd="14dp"
+            android:textColor="#1A1A2E" android:textSize="13sp"/>
+
+        <!-- Recipe Steps divider -->
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#F0F0F0" android:layout_marginTop="18dp" android:layout_marginBottom="12dp"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="📋 RECIPE STEPS"
+            android:textColor="#1A1A2E" android:textSize="14sp" android:textStyle="bold"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="STEP-BY-STEP INSTRUCTIONS (one per line)" android:textColor="#E8871A"
+            android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.05"/>
+        <EditText android:id="@+id/etItemRecipeSteps"
+            android:layout_width="match_parent" android:layout_height="200dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_input_field"
+            android:hint="1. Melt butter in pan on medium heat.\n2. Add ginger-garlic paste...\n3. Pour in sauce..."
+            android:textColorHint="#BBBBBB"
+            android:inputType="textMultiLine|textCapSentences"
+            android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="12dp"
+            android:textColor="#1A1A2E" android:textSize="13sp"
+            android:gravity="top" />
+
+        <!-- Available + Popular toggles -->
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="#F0F0F0" android:layout_marginTop="18dp" android:layout_marginBottom="12dp"/>
+
+        <!-- Veg toggle -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:background="@drawable/bg_input_field"
             android:orientation="horizontal" android:gravity="center_vertical"
             android:padding="14dp">
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Available" android:textColor="#1A1A2E"
+                    android:text="Vegetarian 🌿" android:textColor="#1A1A2E"
                     android:textSize="14sp" android:textStyle="bold" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Show on menu for users" android:textColor="#AAAAAA" android:textSize="12sp" />
+                    android:text="Turn off for non-veg dishes" android:textColor="#AAAAAA" android:textSize="12sp" />
+            </LinearLayout>
+            <Switch android:id="@+id/switchVeg"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:checked="true"
+                android:thumbTint="#4CAF50" android:trackTint="#C8E6C9" />
+        </LinearLayout>
+
+        <!-- Available toggle -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_input_field"
+            android:orientation="horizontal" android:gravity="center_vertical"
+            android:padding="14dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:orientation="vertical">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Available on Menu" android:textColor="#1A1A2E"
+                    android:textSize="14sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Show this kit to customers" android:textColor="#AAAAAA" android:textSize="12sp" />
             </LinearLayout>
             <Switch android:id="@+id/switchAvailable"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
@@ -158,10 +288,10 @@
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                 android:layout_weight="1" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Popular Choice" android:textColor="#1A1A2E"
+                    android:text="Popular Choice 🔥" android:textColor="#1A1A2E"
                     android:textSize="14sp" android:textStyle="bold" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Display in 'Most Loved' section" android:textColor="#AAAAAA" android:textSize="12sp" />
+                    android:text="Display in 'Top Kits' section" android:textColor="#AAAAAA" android:textSize="12sp" />
             </LinearLayout>
             <Switch android:id="@+id/switchPopular"
                 android:layout_width="wrap_content" android:layout_height="wrap_content"
