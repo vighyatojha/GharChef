@@ -21,9 +21,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import java.util.Locale
 
 class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -53,10 +53,10 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
 
-        tvAddress    = findViewById(R.id.tvAddress)
+        tvAddress     = findViewById(R.id.tvAddress)
         btnMyLocation = findViewById(R.id.btnMyLocation)
-        btnConfirm   = findViewById(R.id.btnConfirmLocation)
-        progressBar  = findViewById(R.id.progressBar)
+        btnConfirm    = findViewById(R.id.btnConfirmLocation)
+        progressBar   = findViewById(R.id.progressBar)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -75,13 +75,11 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
     // ── MAP READY ────────────────────────────────────────────────────────
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        map.uiSettings.isZoomControlsEnabled      = true
-        map.uiSettings.isMyLocationButtonEnabled  = false // we have our own button
+        map.uiSettings.isZoomControlsEnabled     = true
+        map.uiSettings.isMyLocationButtonEnabled = false
 
-        // Move to default
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLatLng, 5f))
 
-        // Update address whenever the camera stops moving
         map.setOnCameraIdleListener {
             val center = map.cameraPosition.target
             selectedLat = center.latitude
@@ -89,7 +87,6 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
             reverseGeocode(center)
         }
 
-        // Ask for location permission immediately
         if (hasLocationPermission()) {
             enableMapLocation()
             requestCurrentLocation()
@@ -149,7 +146,6 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
                 if (location != null) {
                     val latLng = LatLng(location.latitude, location.longitude)
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
-                    // onCameraIdleListener will reverse geocode
                 } else {
                     Toast.makeText(this, "Could not get location. Move map manually.", Toast.LENGTH_LONG).show()
                     tvAddress.text = "Move the map to set your location"
@@ -171,17 +167,16 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
             progressBar.visibility = View.GONE
             if (!addresses.isNullOrEmpty()) {
                 val addr = addresses[0]
-                // Build a readable address
                 selectedAddress = buildString {
                     if (!addr.subThoroughfare.isNullOrEmpty()) append("${addr.subThoroughfare}, ")
-                    if (!addr.thoroughfare.isNullOrEmpty()) append("${addr.thoroughfare}, ")
-                    if (!addr.subLocality.isNullOrEmpty()) append("${addr.subLocality}, ")
-                    if (!addr.locality.isNullOrEmpty()) append("${addr.locality}")
+                    if (!addr.thoroughfare.isNullOrEmpty())    append("${addr.thoroughfare}, ")
+                    if (!addr.subLocality.isNullOrEmpty())     append("${addr.subLocality}, ")
+                    if (!addr.locality.isNullOrEmpty())        append("${addr.locality}")
                 }.trimEnd(',', ' ')
                 tvAddress.text = selectedAddress.ifEmpty { "Location selected" }
                 tvAddress.setTextColor(android.graphics.Color.parseColor("#1A1A2E"))
             } else {
-                tvAddress.text = "Address not found — pinch to adjust"
+                tvAddress.text  = "Address not found — pinch to adjust"
                 selectedAddress = "Lat: ${latLng.latitude}, Lng: ${latLng.longitude}"
             }
         } catch (e: Exception) {
@@ -203,22 +198,25 @@ class LocationActivity : AppCompatActivity(), OnMapReadyCallback {
         btnConfirm.isEnabled = false
         btnConfirm.text      = "Saving…"
 
-        db.collection("users").document(uid).update(
-            mapOf(
-                "latitude"  to selectedLat,
-                "longitude" to selectedLng,
-                "address"   to selectedAddress,
-                // Extract city from geocoded address if available
-                "city"      to extractCity()
-            )
-        ).addOnSuccessListener {
-            Toast.makeText(this, "Location saved! 📍", Toast.LENGTH_LONG).show()
-            finish()  // go back to ProfileActivity
-        }.addOnFailureListener { e ->
-            btnConfirm.isEnabled = true
-            btnConfirm.text      = "Confirm This Location"
-            Toast.makeText(this, "Failed to save: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
+        val data = hashMapOf(
+            "latitude"  to selectedLat,
+            "longitude" to selectedLng,
+            "address"   to selectedAddress,
+            "city"      to extractCity()
+        )
+
+        // ── FIX: use set() with merge so it works even if document doesn't exist yet ──
+        db.collection("users").document(uid)
+            .set(data, SetOptions.merge())
+            .addOnSuccessListener {
+                Toast.makeText(this, "Location saved! 📍", Toast.LENGTH_LONG).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                btnConfirm.isEnabled = true
+                btnConfirm.text      = "Confirm This Location"
+                Toast.makeText(this, "Failed to save: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun extractCity(): String {

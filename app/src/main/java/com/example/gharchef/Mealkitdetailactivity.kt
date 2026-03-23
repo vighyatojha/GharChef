@@ -23,20 +23,26 @@ class MealKitDetailActivity : AppCompatActivity() {
         db   = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        // ── Extract intent extras ──────────────────────────────────────
-        val itemId       = intent.getStringExtra("ITEM_ID")       ?: run { finish(); return }
-        val itemName     = intent.getStringExtra("ITEM_NAME")     ?: ""
-        val itemPrice    = intent.getDoubleExtra("ITEM_PRICE",  0.0)
-        val itemImage    = intent.getStringExtra("ITEM_IMAGE")    ?: ""
-        val itemDesc     = intent.getStringExtra("ITEM_DESC")     ?: ""
-        val itemRating   = intent.getDoubleExtra("ITEM_RATING", 4.0)
+        // ── Extract intent extras safely ───────────────────────────────
+        val itemId = intent.getStringExtra("ITEM_ID")
+        if (itemId.isNullOrEmpty()) {
+            Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        val itemName     = intent.getStringExtra("ITEM_NAME")      ?: ""
+        val itemPrice    = intent.getDoubleExtra("ITEM_PRICE",     0.0)
+        val itemImage    = intent.getStringExtra("ITEM_IMAGE")     ?: ""
+        val itemDesc     = intent.getStringExtra("ITEM_DESC")      ?: ""
+        val itemRating   = intent.getDoubleExtra("ITEM_RATING",    4.0)
         val itemPrepTime = intent.getStringExtra("ITEM_PREP_TIME") ?: "20 mins"
-        val itemCategory = intent.getStringExtra("ITEM_CATEGORY") ?: ""
+        val itemCategory = intent.getStringExtra("ITEM_CATEGORY")  ?: ""
         val ingredients  = intent.getStringExtra("ITEM_INGREDIENTS") ?: ""
-        val steps        = intent.getStringExtra("ITEM_STEPS")    ?: ""
-        val cookware     = intent.getStringExtra("ITEM_COOKWARE") ?: ""
+        val steps        = intent.getStringExtra("ITEM_STEPS")     ?: ""
+        val cookware     = intent.getStringExtra("ITEM_COOKWARE")  ?: ""
         val cookwareSubs = intent.getStringExtra("ITEM_COOKWARE_SUBS") ?: ""
-        val serves       = intent.getIntExtra("ITEM_SERVES", 2)
+        val serves       = intent.getIntExtra("ITEM_SERVES",       2)
         val difficulty   = intent.getStringExtra("ITEM_DIFFICULTY") ?: "Easy"
 
         // ── Bind views ────────────────────────────────────────────────
@@ -63,16 +69,22 @@ class MealKitDetailActivity : AppCompatActivity() {
         if (itemImage.isNotEmpty()) {
             Glide.with(this).load(itemImage).centerCrop().into(ivHero)
         }
-        tvName.text     = itemName
-        tvPrice.text    = "₹%.0f".format(itemPrice)
-        tvRating.text   = "⭐ ${"%.1f".format(itemRating)}"
-        tvPrepTime.text = "⏱  $itemPrepTime"
+        tvName.text       = itemName
+        tvPrice.text      = "₹%.0f".format(itemPrice)
+        tvRating.text     = "⭐ ${"%.1f".format(itemRating)}"
+        tvPrepTime.text   = "⏱  $itemPrepTime"
         tvDifficulty.text = difficulty
-        tvServes.text   = "🍽  Serves $serves"
-        tvCategory.text = itemCategory.replace("_", " ").replaceFirstChar { it.uppercase() }
-        tvDesc.text     = itemDesc.ifEmpty { "A delicious home-style meal kit with all ingredients pre-measured and ready to cook." }
+        tvServes.text     = "🍽  Serves $serves"
+        tvCategory.text   = itemCategory
+            .replace("_", " ")
+            .split(" ")
+            .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
+        tvDesc.text = itemDesc.ifEmpty {
+            "A delicious home-style meal kit with all ingredients pre-measured and ready to cook."
+        }
 
         // ── Ingredients ───────────────────────────────────────────────
+        ingredientsContainer.removeAllViews()
         if (ingredients.isNotEmpty()) {
             ingredients.split("\n").filter { it.isNotBlank() }.forEach { ing ->
                 val row = LinearLayout(this).apply {
@@ -92,7 +104,7 @@ class MealKitDetailActivity : AppCompatActivity() {
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
-                    lp.topMargin = 6
+                    lp.topMargin   = 6
                     lp.rightMargin = 10
                     layoutParams = lp
                 }
@@ -100,7 +112,9 @@ class MealKitDetailActivity : AppCompatActivity() {
                     text = ing.trim()
                     setTextColor(Color.parseColor("#333333"))
                     textSize = 13.5f
-                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                    layoutParams = LinearLayout.LayoutParams(
+                        0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f
+                    )
                 }
                 row.addView(dot)
                 row.addView(tv)
@@ -116,20 +130,20 @@ class MealKitDetailActivity : AppCompatActivity() {
         }
 
         // ── Recipe Steps ──────────────────────────────────────────────
+        stepsContainer.removeAllViews()
         if (steps.isNotEmpty()) {
             steps.split("\n").filter { it.isNotBlank() }.forEach { step ->
                 val stepLayout = LinearLayout(this).apply {
                     orientation = LinearLayout.HORIZONTAL
                     setPadding(0, 0, 0, 14)
-                    val lp = LinearLayout.LayoutParams(
+                    layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
-                    layoutParams = lp
                 }
-                // Extract step number if present (e.g. "1. Do this")
-                val stepNum = step.substringBefore(".").trim().toIntOrNull()
+                val stepNum  = step.substringBefore(".").trim().toIntOrNull()
                 val stepText = if (stepNum != null) step.substringAfter(".").trim() else step.trim()
+
                 val numBadge = TextView(this).apply {
                     text = if (stepNum != null) "$stepNum" else "•"
                     setTextColor(Color.WHITE)
@@ -138,7 +152,7 @@ class MealKitDetailActivity : AppCompatActivity() {
                     gravity = android.view.Gravity.CENTER
                     background = getDrawable(R.drawable.bg_button_orange)
                     val lp = LinearLayout.LayoutParams(28, 28)
-                    lp.topMargin = 2
+                    lp.topMargin   = 2
                     lp.rightMargin = 12
                     layoutParams = lp
                 }
@@ -147,7 +161,9 @@ class MealKitDetailActivity : AppCompatActivity() {
                     setTextColor(Color.parseColor("#333333"))
                     textSize = 13.5f
                     setLineSpacing(0f, 1.4f)
-                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                    layoutParams = LinearLayout.LayoutParams(
+                        0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f
+                    )
                 }
                 stepLayout.addView(numBadge)
                 stepLayout.addView(tv)
@@ -155,7 +171,9 @@ class MealKitDetailActivity : AppCompatActivity() {
 
                 // Divider between steps
                 val divider = View(this).apply {
-                    val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
+                    val lp = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 1
+                    )
                     lp.bottomMargin = 14
                     layoutParams = lp
                     setBackgroundColor(Color.parseColor("#F0E8DC"))
@@ -187,33 +205,58 @@ class MealKitDetailActivity : AppCompatActivity() {
 
         // ── Add to Cart ───────────────────────────────────────────────
         btnAddToCart.setOnClickListener {
-            val uid = auth.currentUser?.uid ?: run {
+            val uid = auth.currentUser?.uid
+            if (uid == null) {
                 Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, LoginActivity::class.java))
                 return@setOnClickListener
             }
+
             btnAddToCart.isEnabled = false
-            btnAddToCart.text = "Adding..."
+            btnAddToCart.text      = "Adding..."
 
             val ref = db.collection("carts").document(uid).collection("items").document(itemId)
-            ref.get().addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    ref.update("quantity", (doc.getLong("quantity") ?: 1) + 1)
-                    Toast.makeText(this, "Quantity updated 🛒", Toast.LENGTH_SHORT).show()
-                } else {
-                    ref.set(hashMapOf(
-                        "itemId" to itemId, "name" to itemName,
-                        "price" to itemPrice, "imageUrl" to itemImage, "quantity" to 1
-                    ), SetOptions.merge())
-                    Toast.makeText(this, "$itemName added to cart! 🛒", Toast.LENGTH_SHORT).show()
+            ref.get()
+                .addOnSuccessListener { doc ->
+                    if (doc.exists()) {
+                        val currentQty = doc.getLong("quantity") ?: 1
+                        ref.update("quantity", currentQty + 1)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Quantity updated 🛒", Toast.LENGTH_SHORT).show()
+                                btnAddToCart.isEnabled = true
+                                btnAddToCart.text      = "Added to Cart ✓"
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                                btnAddToCart.isEnabled = true
+                                btnAddToCart.text      = "Add to Cart"
+                            }
+                    } else {
+                        val cartData = hashMapOf(
+                            "itemId"   to itemId,
+                            "name"     to itemName,
+                            "price"    to itemPrice,
+                            "imageUrl" to itemImage,
+                            "quantity" to 1
+                        )
+                        ref.set(cartData, SetOptions.merge())
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "$itemName added to cart! 🛒", Toast.LENGTH_SHORT).show()
+                                btnAddToCart.isEnabled = true
+                                btnAddToCart.text      = "Added to Cart ✓"
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                                btnAddToCart.isEnabled = true
+                                btnAddToCart.text      = "Add to Cart"
+                            }
+                    }
                 }
-                btnAddToCart.isEnabled = true
-                btnAddToCart.text      = "Added to Cart ✓"
-            }.addOnFailureListener {
-                btnAddToCart.isEnabled = true
-                btnAddToCart.text      = "Add to Cart"
-                Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    btnAddToCart.isEnabled = true
+                    btnAddToCart.text      = "Add to Cart"
+                }
         }
     }
 }

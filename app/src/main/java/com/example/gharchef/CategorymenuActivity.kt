@@ -50,9 +50,14 @@ class CategoryMenuActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() {
-        try { findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
-            startActivity(Intent(this, ActivityHome::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
-        }} catch (_: Exception) {}
+        try {
+            findViewById<LinearLayout>(R.id.navHome).setOnClickListener {
+                startActivity(
+                    Intent(this, ActivityHome::class.java)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                )
+            }
+        } catch (_: Exception) {}
         try { findViewById<LinearLayout>(R.id.navSearch).setOnClickListener  { startActivity(Intent(this, SearchActivity::class.java)) } } catch (_: Exception) {}
         try { findViewById<LinearLayout>(R.id.navOrders).setOnClickListener  { startActivity(Intent(this, OrdersActivity::class.java)) } } catch (_: Exception) {}
         try { findViewById<LinearLayout>(R.id.navCart).setOnClickListener    { startActivity(Intent(this, CartActivity::class.java)) } } catch (_: Exception) {}
@@ -67,32 +72,39 @@ class CategoryMenuActivity : AppCompatActivity() {
         val query = if (categoryKey == "all")
             db.collection("menu").whereEqualTo("available", true)
         else
-            db.collection("menu").whereEqualTo("category", categoryKey).whereEqualTo("available", true)
+            db.collection("menu")
+                .whereEqualTo("category", categoryKey)
+                .whereEqualTo("available", true)
 
         query.get()
             .addOnSuccessListener { result ->
                 progressBar.visibility = View.GONE
                 menuItems.clear()
                 for (doc in result.documents) {
-                    val item = MenuItemData(
-                        id                  = doc.id,
-                        name                = doc.getString("name")                ?: "",
-                        description         = doc.getString("description")         ?: "",
-                        price               = doc.getDouble("price")               ?: 0.0,
-                        imageUrl            = doc.getString("imageUrl")            ?: "",
-                        category            = doc.getString("category")            ?: "",
-                        prepTime            = doc.getString("prepTime")            ?: "20 mins",
-                        rating              = doc.getDouble("rating")              ?: 4.0,
-                        available           = doc.getBoolean("available")          ?: true,
-                        serves              = (doc.getLong("serves")?.toInt())     ?: 2,
-                        difficulty          = doc.getString("difficulty")          ?: "Easy",
-                        ingredients         = doc.getString("ingredients")         ?: "",
-                        recipeSteps         = doc.getString("recipeSteps")         ?: "",
-                        cookware            = doc.getString("cookware")            ?: "",
-                        cookwareSubstitutes = doc.getString("cookwareSubstitutes") ?: ""
+                    val name = doc.getString("name")?.takeIf { it.isNotEmpty() } ?: continue
+                    menuItems.add(
+                        MenuItemData(
+                            id                  = doc.id,
+                            name                = name,
+                            description         = doc.getString("description")         ?: "",
+                            price               = doc.getDouble("price")               ?: 0.0,
+                            imageUrl            = doc.getString("imageUrl")            ?: "",
+                            category            = doc.getString("category")            ?: "",
+                            prepTime            = doc.getString("prepTime")            ?: "20 mins",
+                            rating              = doc.getDouble("rating")              ?: 4.0,
+                            available           = doc.getBoolean("available")          ?: true,
+                            popular             = doc.getBoolean("popular")            ?: false,
+                            isVeg               = doc.getBoolean("isVeg")              ?: true,
+                            serves              = doc.getLong("serves")?.toInt()       ?: 2,
+                            difficulty          = doc.getString("difficulty")          ?: "Easy",
+                            ingredients         = doc.getString("ingredients")         ?: "",
+                            recipeSteps         = doc.getString("recipeSteps")         ?: "",
+                            cookware            = doc.getString("cookware")            ?: "",
+                            cookwareSubstitutes = doc.getString("cookwareSubstitutes") ?: ""
+                        )
                     )
-                    if (item.name.isNotEmpty()) menuItems.add(item)
                 }
+
                 if (menuItems.isEmpty()) {
                     tvEmpty.visibility = View.VISIBLE
                     rvMenu.visibility  = View.GONE
@@ -115,7 +127,7 @@ class CategoryMenuActivity : AppCompatActivity() {
     }
 
     private fun openKitDetail(item: MenuItemData) {
-        startActivity(Intent(this, MealKitDetailActivity::class.java).apply {
+        val intent = Intent(this, MealKitDetailActivity::class.java).apply {
             putExtra("ITEM_ID",            item.id)
             putExtra("ITEM_NAME",          item.name)
             putExtra("ITEM_PRICE",         item.price)
@@ -130,23 +142,31 @@ class CategoryMenuActivity : AppCompatActivity() {
             putExtra("ITEM_COOKWARE_SUBS", item.cookwareSubstitutes)
             putExtra("ITEM_SERVES",        item.serves)
             putExtra("ITEM_DIFFICULTY",    item.difficulty)
-        })
+        }
+        startActivity(intent)
     }
 
     private fun addToCart(item: MenuItemData) {
         val uid = auth.currentUser?.uid ?: run {
-            Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show(); return
+            Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
+            return
         }
         val itemRef = db.collection("carts").document(uid).collection("items").document(item.id)
         itemRef.get().addOnSuccessListener { doc ->
             if (doc.exists()) {
-                itemRef.update("quantity", (doc.getLong("quantity") ?: 1) + 1)
+                val qty = doc.getLong("quantity") ?: 1
+                itemRef.update("quantity", qty + 1)
                 Toast.makeText(this, "${item.name} quantity updated ✓", Toast.LENGTH_SHORT).show()
             } else {
-                itemRef.set(hashMapOf(
-                    "itemId" to item.id, "name" to item.name,
-                    "price" to item.price, "imageUrl" to item.imageUrl, "quantity" to 1
-                ), SetOptions.merge()).addOnSuccessListener {
+                itemRef.set(
+                    hashMapOf(
+                        "itemId"   to item.id,
+                        "name"     to item.name,
+                        "price"    to item.price,
+                        "imageUrl" to item.imageUrl,
+                        "quantity" to 1
+                    ), SetOptions.merge()
+                ).addOnSuccessListener {
                     Toast.makeText(this, "${item.name} added to cart ✓", Toast.LENGTH_SHORT).show()
                 }.addOnFailureListener { e ->
                     Toast.makeText(this, "Failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -175,7 +195,9 @@ class MenuItemAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        MenuViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_menu, parent, false))
+        MenuViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_menu, parent, false)
+        )
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         val item = items[position]
@@ -184,8 +206,8 @@ class MenuItemAdapter(
         holder.tvPrice.text    = "₹%.2f".format(item.price)
         holder.tvPrepTime.text = "⏱ ${item.prepTime}"
         holder.tvRating.text   = "★ ${"%.1f".format(item.rating)}"
-        holder.btnAdd.setOnClickListener   { onAddToCart(item) }
-        holder.itemView.setOnClickListener { onItemClick(item) }
+        holder.btnAdd.setOnClickListener    { onAddToCart(item) }
+        holder.itemView.setOnClickListener  { onItemClick(item) }
     }
 
     override fun getItemCount() = items.size
